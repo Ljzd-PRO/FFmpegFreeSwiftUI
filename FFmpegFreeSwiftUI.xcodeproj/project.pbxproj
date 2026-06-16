@@ -31,6 +31,10 @@
 		A0467DC0EF1172740B0861F1 /* PrepareFilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC4428A1AF57F7F697422435 /* PrepareFilesView.swift */; };
 		A293BBF78CA3E301684FFAEA /* MuxingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4288C35ABAAE04CE51C0360 /* MuxingView.swift */; };
 		A34A2DC5B92E167C686F88B8 /* FFmpegRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CC605409D579B99B3B5A4F /* FFmpegRunner.swift */; };
+		A51000000000000000000001 /* ParameterPanelTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50000000000000000000001 /* ParameterPanelTypes.swift */; };
+		A51000000000000000000002 /* ParameterPanelControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50000000000000000000002 /* ParameterPanelControls.swift */; };
+		A51000000000000000000003 /* ParameterOptionCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50000000000000000000003 /* ParameterOptionCatalog.swift */; };
+		A51000000000000000000004 /* ParameterPanelPanes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50000000000000000000004 /* ParameterPanelPanes.swift */; };
 		AE607FCE9F15837FE607C01A /* PerformanceMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E152535A46DAA1A7EA8FEA2F /* PerformanceMonitor.swift */; };
 		B7F7642A7783EF0C295795A7 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D67A0C97724FBBA4D0753C3 /* AppSettings.swift */; };
 		CF505AD32FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF505AD12FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp.swift */; };
@@ -63,6 +67,10 @@
 		9D67A0C97724FBBA4D0753C3 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		A2CC605409D579B99B3B5A4F /* FFmpegRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFmpegRunner.swift; sourceTree = "<group>"; };
 		A4288C35ABAAE04CE51C0360 /* MuxingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuxingView.swift; sourceTree = "<group>"; };
+		A50000000000000000000001 /* ParameterPanelTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterPanelTypes.swift; sourceTree = "<group>"; };
+		A50000000000000000000002 /* ParameterPanelControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterPanelControls.swift; sourceTree = "<group>"; };
+		A50000000000000000000003 /* ParameterOptionCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterOptionCatalog.swift; sourceTree = "<group>"; };
+		A50000000000000000000004 /* ParameterPanelPanes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterPanelPanes.swift; sourceTree = "<group>"; };
 		A4B6E6C7B6EF8DBE00475AB5 /* EncodingTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncodingTask.swift; sourceTree = "<group>"; };
 		A992C6E3067AC1FE5A8BB627 /* RemoteCommandServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommandServer.swift; sourceTree = "<group>"; };
 		AC4428A1AF57F7F697422435 /* PrepareFilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrepareFilesView.swift; sourceTree = "<group>"; };
@@ -101,9 +109,8 @@
 				A4B6E6C7B6EF8DBE00475AB5 /* EncodingTask.swift */,
 				CAEE752393C4B6B0FAEFB319 /* PresetData.swift */,
 			);
-			name = Models;
-			path = Sources/FFmpegFreeSwiftUI/Models;
-			sourceTree = SOURCE_ROOT;
+			path = Models;
+			sourceTree = "<group>";
 		};
 		A10000000000000000000003 /* Services */ = {
 			isa = PBXGroup;
@@ -118,9 +125,8 @@
 				E152535A46DAA1A7EA8FEA2F /* PerformanceMonitor.swift */,
 				EC52E7F08F6B79F25D026FA1 /* PresetIOService.swift */,
 			);
-			name = Services;
-			path = Sources/FFmpegFreeSwiftUI/Services;
-			sourceTree = SOURCE_ROOT;
+			path = Services;
+			sourceTree = "<group>";
 		};
 		A10000000000000000000004 /* Stores */ = {
 			isa = PBXGroup;
@@ -131,9 +137,8 @@
 				A992C6E3067AC1FE5A8BB627 /* RemoteCommandServer.swift */,
 				4637CB2D630FFA0471A6493D /* SettingsStore.swift */,
 			);
-			name = Stores;
-			path = Sources/FFmpegFreeSwiftUI/Stores;
-			sourceTree = SOURCE_ROOT;
+			path = Stores;
+			sourceTree = "<group>";
 		};
 		A10000000000000000000005 /* Views */ = {
 			isa = PBXGroup;
@@ -143,16 +148,15 @@
 				E68FD403BEEEB48255A3EE78 /* MainAppView.swift */,
 				1CB2574719BEDBF40FECFB23 /* MediaInfoView.swift */,
 				A4288C35ABAAE04CE51C0360 /* MuxingView.swift */,
-				7C2013F1227B0B992AA376E2 /* ParameterPanelView.swift */,
+				A50000000000000000000005 /* ParameterPanel */,
 				721AB875A980039CA8A52B05 /* PerformanceView.swift */,
 				AC4428A1AF57F7F697422435 /* PrepareFilesView.swift */,
 				7ED7F5D4D70F86CF2E067448 /* SettingsView.swift */,
 				430D9466864BF1654E248C6A /* StartPageView.swift */,
 				14837993E6A68900A4E1D578 /* SupportersView.swift */,
 			);
-			name = Views;
-			path = Sources/FFmpegFreeSwiftUI/Views;
-			sourceTree = SOURCE_ROOT;
+			path = Views;
+			sourceTree = "<group>";
 		};
 		A10000000000000000000006 /* Utilities */ = {
 			isa = PBXGroup;
@@ -160,9 +164,32 @@
 				1173A60FC4FE74730EC7FABA /* FileSizeFormatting.swift */,
 				543DC76E53AE81A5AD582415 /* ShellQuoting.swift */,
 			);
-			name = Utilities;
-			path = Sources/FFmpegFreeSwiftUI/Utilities;
-			sourceTree = SOURCE_ROOT;
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		A50000000000000000000005 /* ParameterPanel */ = {
+			isa = PBXGroup;
+			children = (
+				7C2013F1227B0B992AA376E2 /* ParameterPanelView.swift */,
+				A50000000000000000000001 /* ParameterPanelTypes.swift */,
+				A50000000000000000000002 /* ParameterPanelControls.swift */,
+				A50000000000000000000003 /* ParameterOptionCatalog.swift */,
+				A50000000000000000000004 /* ParameterPanelPanes.swift */,
+			);
+			path = ParameterPanel;
+			sourceTree = "<group>";
+		};
+		A50000000000000000000006 /* FFmpegFreeSwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000002 /* Models */,
+				A10000000000000000000003 /* Services */,
+				A10000000000000000000004 /* Stores */,
+				A10000000000000000000005 /* Views */,
+				A10000000000000000000006 /* Utilities */,
+			);
+			path = FFmpegFreeSwiftUI;
+			sourceTree = "<group>";
 		};
 		BF7A2D27A78D590BDEF15AF2 /* Products */ = {
 			isa = PBXGroup;
@@ -177,21 +204,16 @@
 			children = (
 				CF505AD12FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp.swift */,
 			);
-			name = FFmpegFreeSwiftUIApp;
-			path = Sources/FFmpegFreeSwiftUIApp;
+			path = FFmpegFreeSwiftUIApp;
 			sourceTree = "<group>";
 		};
 		D685C104AFFBCF83C7CB0FB6 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				A50000000000000000000006 /* FFmpegFreeSwiftUI */,
 				CF505AD22FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp */,
-				A10000000000000000000002 /* Models */,
-				A10000000000000000000003 /* Services */,
-				A10000000000000000000004 /* Stores */,
-				A10000000000000000000005 /* Views */,
-				A10000000000000000000006 /* Utilities */,
 			);
-			name = Sources;
+			path = Sources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -287,6 +309,10 @@
 				919B12D14B280CEA87AB4F16 /* MainAppView.swift in Sources */,
 				746042AA80AB8AFF0183237D /* MediaInfoView.swift in Sources */,
 				6606605BEB81FF66EC5BC005 /* ParameterPanelView.swift in Sources */,
+				A51000000000000000000001 /* ParameterPanelTypes.swift in Sources */,
+				A51000000000000000000002 /* ParameterPanelControls.swift in Sources */,
+				A51000000000000000000003 /* ParameterOptionCatalog.swift in Sources */,
+				A51000000000000000000004 /* ParameterPanelPanes.swift in Sources */,
 				4F9E7EF261F552464F52DFA2 /* PerformanceView.swift in Sources */,
 				CF505AD32FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp.swift in Sources */,
 				A0467DC0EF1172740B0861F1 /* PrepareFilesView.swift in Sources */,
