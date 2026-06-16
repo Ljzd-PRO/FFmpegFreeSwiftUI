@@ -1,0 +1,30 @@
+// swift-tools-version: 5.9
+import PackageDescription
+
+let package = Package(
+    name: "FFmpegFreeSwiftUI",
+    platforms: [
+        .macOS(.v13)
+    ],
+    products: [
+        .library(name: "FFmpegFreeSwiftUI", targets: ["FFmpegFreeSwiftUI"]),
+        .executable(name: "FFmpegFreeSwiftUIApp", targets: ["FFmpegFreeSwiftUIApp"]),
+        .executable(name: "FFmpegFreeSwiftUITestRunner", targets: ["FFmpegFreeSwiftUITestRunner"])
+    ],
+    targets: [
+        .target(
+            name: "FFmpegFreeSwiftUI",
+            path: "Sources/FFmpegFreeSwiftUI"
+        ),
+        .executableTarget(
+            name: "FFmpegFreeSwiftUIApp",
+            dependencies: ["FFmpegFreeSwiftUI"],
+            path: "Sources/FFmpegFreeSwiftUIApp"
+        ),
+        .executableTarget(
+            name: "FFmpegFreeSwiftUITestRunner",
+            dependencies: ["FFmpegFreeSwiftUI"],
+            path: "Sources/FFmpegFreeSwiftUITestRunner"
+        )
+    ]
+)
