@@ -17,7 +17,9 @@ public struct FFmpegProgressParser: Sendable {
         if line.hasPrefix("frame=") || line.hasPrefix("size=") || line.contains(" time=") {
             if let frame = namedValue(#"frame=\s*(\d+)"#, in: line) { progress.frame = frame }
             if let fps = namedValue(#"fps=\s*([\d\.]+)"#, in: line) { progress.fps = fps }
-            if let q = namedValue(#"q=\s*([\-\d\.]+)"#, in: line), q != "0" { progress.quality = q }
+            if let q = namedValue(#"q=\s*([\-\d\.]+)"#, in: line), isMeaningfulQuality(q) {
+                progress.quality = q
+            }
             if let size = sizeMatch(in: line) {
                 progress.outputSizeKB = size
                 progress.outputSizeText = FileSizeFormatting.sizeText(kilobytes: size)
@@ -85,6 +87,12 @@ public struct FFmpegProgressParser: Sendable {
 
     private func namedValue(_ pattern: String, in line: String) -> String? {
         firstMatch(pattern, in: line)
+    }
+
+    private func isMeaningfulQuality(_ value: String) -> Bool {
+        let normalized = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let number = Double(normalized), number.isFinite else { return false }
+        return abs(number) > 0.000_001
     }
 
     private func sizeMatch(in line: String) -> Int64? {

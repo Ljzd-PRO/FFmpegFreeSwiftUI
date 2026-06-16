@@ -20,8 +20,7 @@ public struct EncodeQueueView: View {
                         .lineLimit(1)
                 }
                 TableColumn("状态") { task in
-                    Text(task.status.rawValue)
-                        .foregroundStyle(color(for: task.status))
+                    StatusCell(task: task)
                 }
                 TableColumn("进度") { task in
                     ProgressCell(task: task)
@@ -196,6 +195,25 @@ public struct EncodeQueueView: View {
         let value = speed.replacingOccurrences(of: "x", with: "")
         guard let double = Double(value) else { return speed }
         return String(format: "%.0f%%", double * 100)
+    }
+}
+
+private struct StatusCell: View {
+    @ObservedObject var task: EncodingTask
+
+    var body: some View {
+        Text(task.status.rawValue)
+            .foregroundStyle(color(for: task.status))
+    }
+
+    private func color(for status: EncodingStatus) -> Color {
+        switch status {
+        case .pending: return .secondary
+        case .running: return .green
+        case .paused: return .orange
+        case .completed: return .mint
+        case .stopped, .failed: return .red
+        }
     }
 }
 

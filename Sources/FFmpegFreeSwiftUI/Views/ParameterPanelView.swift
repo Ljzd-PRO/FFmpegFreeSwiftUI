@@ -181,15 +181,18 @@ private struct ParameterFieldInfo {
 private struct ParameterOption: Hashable {
     var title: String
     var value: String
+    var clearsToPlaceholder: Bool
 
     init(_ value: String) {
         title = value
         self.value = value
+        clearsToPlaceholder = false
     }
 
-    init(title: String, value: String) {
+    init(title: String, value: String, clearsToPlaceholder: Bool = false) {
         self.title = title
         self.value = value
+        self.clearsToPlaceholder = clearsToPlaceholder
     }
 }
 
@@ -224,7 +227,7 @@ private struct EditableComboBox: NSViewRepresentable {
         context.coordinator.text = $text
         context.coordinator.options = options
         comboBox.placeholderString = placeholder
-        let displayText = options.first(where: { $0.value == text && !$0.title.isEmpty })?.title ?? text
+        let displayText = options.first(where: { $0.value == text && !$0.title.isEmpty && !$0.clearsToPlaceholder })?.title ?? text
         if comboBox.stringValue != displayText {
             comboBox.stringValue = displayText
         }
@@ -238,6 +241,7 @@ private struct EditableComboBox: NSViewRepresentable {
     final class Coordinator: NSObject, NSComboBoxDelegate {
         var text: Binding<String>
         var options: [ParameterOption]
+        private var isClearingPlaceholderOption = false
 
         init(text: Binding<String>, options: [ParameterOption]) {
             self.text = text
@@ -248,13 +252,30 @@ private struct EditableComboBox: NSViewRepresentable {
             guard let comboBox = notification.object as? NSComboBox else { return }
             let index = comboBox.indexOfSelectedItem
             if options.indices.contains(index) {
-                text.wrappedValue = options[index].value
-                comboBox.stringValue = options[index].title
+                let option = options[index]
+                text.wrappedValue = option.value
+                guard option.clearsToPlaceholder else {
+                    comboBox.stringValue = option.title
+                    return
+                }
+
+                isClearingPlaceholderOption = true
+                comboBox.deselectItem(at: index)
+                comboBox.stringValue = ""
+                DispatchQueue.main.async { [weak self, weak comboBox] in
+                    comboBox?.stringValue = ""
+                    self?.isClearingPlaceholderOption = false
+                }
             }
         }
 
         func controlTextDidChange(_ notification: Notification) {
             guard let comboBox = notification.object as? NSComboBox else { return }
+            guard !isClearingPlaceholderOption else {
+                comboBox.stringValue = ""
+                text.wrappedValue = ""
+                return
+            }
             let visibleText = comboBox.stringValue
             if let option = options.first(where: { $0.title == visibleText }) {
                 text.wrappedValue = option.value
@@ -696,9 +717,9 @@ private enum ParameterOptionCatalog {
     static func profile(for encoder: String, probedCapabilities: [String: VideoEncoderCapability] = [:]) -> VideoEncoderProfile {
         if let capability = VideoEncoderCapabilityCatalog.capability(for: encoder, probed: probedCapabilities) {
             return VideoEncoderProfile(
-                presets: opts(capability.presets),
+                presets: capability.supportsPreset ? opts(capability.presets) : [videoToolboxNotApplicableOption],
                 profiles: opts(capability.profiles),
-                tunes: opts(capability.tunes),
+                tunes: capability.supportsTune ? opts(capability.tunes) : [videoToolboxNotApplicableOption],
                 pixelFormats: opts(capability.pixelFormats)
             )
         }
@@ -718,7 +739,7 @@ private enum ParameterOptionCatalog {
                 title: videoPreset.title,
                 placeholder: "不适用 VideoToolbox",
                 help: "VideoToolbox 不使用 x264/x265 的 -preset；如旧预设保留此值，命令生成时会跳过。",
-                options: [ParameterOption(title: "不适用 VideoToolbox", value: "")]
+                options: [videoToolboxNotApplicableOption]
             )
         }
         return videoPreset
@@ -730,7 +751,7 @@ private enum ParameterOptionCatalog {
                 title: videoTune.title,
                 placeholder: "不适用 VideoToolbox",
                 help: "VideoToolbox 不使用 x264/x265 的 -tune；低延迟请在进阶参数中使用 -realtime 1 等 VT 参数。",
-                options: [ParameterOption(title: "不适用 VideoToolbox", value: "")]
+                options: [videoToolboxNotApplicableOption]
             )
         }
         return videoTune
@@ -742,7 +763,7 @@ private enum ParameterOptionCatalog {
                 title: videoGPU.title,
                 placeholder: "不适用 VideoToolbox",
                 help: "VideoToolbox 由 macOS 选择可用硬件，不支持 FFmpeg 的 -gpu 选择语义；命令生成时会跳过。",
-                options: [ParameterOption(title: "不适用 VideoToolbox", value: "")]
+                options: [videoToolboxNotApplicableOption]
             )
         }
         return videoGPU
@@ -754,7 +775,7 @@ private enum ParameterOptionCatalog {
                 title: videoThreads.title,
                 placeholder: "不适用 VideoToolbox",
                 help: "VideoToolbox 编码器线程能力由系统管理，不支持手动 -threads:v；命令生成时会跳过。",
-                options: [ParameterOption(title: "不适用 VideoToolbox", value: "")]
+                options: [videoToolboxNotApplicableOption]
             )
         }
         return videoThreads
@@ -832,6 +853,7 @@ private enum ParameterOptionCatalog {
     ]
 
     private static let commonPixelFormats = ["", "yuv420p", "yuv420p10le", "yuv422p", "yuv422p10le", "yuv444p", "yuv444p10le", "nv12", "p010le", "gbrp", "gray"]
+    private static let videoToolboxNotApplicableOption = ParameterOption(title: "不适用 VideoToolbox", value: "", clearsToPlaceholder: true)
 
     private static func opts(_ values: [String]) -> [ParameterOption] {
         values.map(ParameterOption.init)

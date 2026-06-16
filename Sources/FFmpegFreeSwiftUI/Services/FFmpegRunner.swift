@@ -13,6 +13,14 @@ public final class FFmpegRunningProcess {
         process.processIdentifier
     }
 
+    public func waitUntilExitStatus() async -> Int32 {
+        let process = process
+        return await Task.detached(priority: .utility) {
+            process.waitUntilExit()
+            return process.terminationStatus
+        }.value
+    }
+
     public func send(_ message: String) {
         guard let data = (message + "\n").data(using: .utf8) else { return }
         stdinPipe.fileHandleForWriting.write(data)

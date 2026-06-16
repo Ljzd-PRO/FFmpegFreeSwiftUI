@@ -137,6 +137,21 @@ private func testVideoToolboxCommandSkipsGenericEncoderOptions() throws {
     try expect(!command.contains("-threads:v 8"), "videotoolbox should skip video threads")
 }
 
+private func testVideoToolboxNotApplicableSelectionClearsGenericOptions() throws {
+    var preset = PresetData()
+    preset.videoEncoder = "hevc_videotoolbox"
+    preset.videoPreset = ""
+    preset.videoTune = ""
+    preset.videoGPU = ""
+    preset.videoThreads = ""
+    let command = FFmpegCommandBuilder().build(preset: preset, input: "/tmp/in.mov", output: "/tmp/out.mp4")
+    try expect(!command.contains("不适用 VideoToolbox"), "placeholder text should never enter command")
+    try expect(!command.contains("-preset"), "empty videotoolbox preset should not emit")
+    try expect(!command.contains("-tune"), "empty videotoolbox tune should not emit")
+    try expect(!command.contains("-gpu"), "empty videotoolbox gpu should not emit")
+    try expect(!command.contains("-threads:v"), "empty videotoolbox threads should not emit")
+}
+
 private func testVideoToolboxProbeParser() throws {
     let output = """
     Encoder hevc_videotoolbox [VideoToolbox H.265 Encoder]:
@@ -205,6 +220,16 @@ private func testParsesDurationAndProgressLine() throws {
     try expect(abs(progress.percent - 0.5) < 0.001, "percent")
 }
 
+private func testProgressParserIgnoresPlaceholderQuality() throws {
+    var progress = EncodingProgress()
+    progress.quality = "N/A"
+    let parser = FFmpegProgressParser()
+    try expect(parser.parse(line: "frame=   30 fps=0.0 q=-0.0 Lsize=N/A time=00:00:00.96 bitrate=N/A speed=9.34x", into: &progress, startedAt: Date()), "placeholder quality line should parse")
+    try expectEqual(progress.quality, "N/A", "placeholder q should not replace quality")
+    try expect(parser.parse(line: "frame=  100 fps=25 q=23.0 size=    2048KiB time=00:01:00.00 bitrate=1200.0kbits/s speed=2.0x", into: &progress, startedAt: Date()), "real quality line should parse")
+    try expectEqual(progress.quality, "23.0", "real q should replace quality")
+}
+
 private func testOutputPathAndShellSplit() throws {
     var preset = PresetData()
     preset.outputContainer = "mkv"
@@ -229,11 +254,13 @@ let tests: [(String, () throws -> Void)] = [
     ("Quality argument normalization", testNormalizesQualityArgumentWithoutDash),
     ("VideoToolbox capability defaults", testVideoToolboxCapabilityDefaults),
     ("VideoToolbox command skips generic options", testVideoToolboxCommandSkipsGenericEncoderOptions),
+    ("VideoToolbox not applicable clears generic options", testVideoToolboxNotApplicableSelectionClearsGenericOptions),
     ("VideoToolbox probe parser", testVideoToolboxProbeParser),
     ("Full custom placeholders", testFullCustomArgumentsReplacePlaceholders),
     ("Stream control", testStreamControlIndexesVideoAndAudioParameters),
     ("Subtitle burn", testSubtitleBurnAddsFilter),
     ("Progress parser", testParsesDurationAndProgressLine),
+    ("Progress parser ignores placeholder quality", testProgressParserIgnoresPlaceholderQuality),
     ("Output path and shell split", testOutputPathAndShellSplit)
 ]
 

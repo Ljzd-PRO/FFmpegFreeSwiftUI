@@ -12,6 +12,7 @@ public final class EncodingQueueStore: ObservableObject {
     private let sleepPreventer = SleepPreventer()
     private var runningProcesses: [UUID: FFmpegRunningProcess] = [:]
     private var lastOutputUpdate: [UUID: Date] = [:]
+    private var handledTerminations: Set<UUID> = []
 
     public init(settingsStore: SettingsStore) {
         self.settingsStore = settingsStore
@@ -107,6 +108,7 @@ public final class EncodingQueueStore: ObservableObject {
         task.progress = EncodingProgress()
         task.errors.removeAll()
         task.nonProgressOutput.removeAll()
+        handledTerminations.remove(task.id)
         sleepPreventer.start()
 
         do {
@@ -119,8 +121,16 @@ public final class EncodingQueueStore: ObservableObject {
                     self?.handleTermination(status, task: task)
                 }
             }
-            runningProcesses[task.id] = running
-            task.processIdentifier = running.processIdentifier
+            if !handledTerminations.contains(task.id) {
+                runningProcesses[task.id] = running
+                task.processIdentifier = running.processIdentifier
+            }
+            Task { [weak self, weak task, running] in
+                let status = await running.waitUntilExitStatus()
+                await MainActor.run {
+                    self?.handleTermination(status, task: task)
+                }
+            }
         } catch {
             task.status = .failed
             task.errors.append("[FFmpegFreeSwiftUI] \(error.localizedDescription)")
@@ -173,6 +183,7 @@ public final class EncodingQueueStore: ObservableObject {
             stop(task)
         }
         runningProcesses[task.id] = nil
+        handledTerminations.remove(task.id)
         tasks.removeAll { $0.id == task.id }
         selectedTaskID = tasks.first?.id
         maybeStopSleepPreventer()
@@ -193,6 +204,7 @@ public final class EncodingQueueStore: ObservableObject {
         task.completedAt = nil
         task.startedAt = nil
         task.wasManuallyStopped = false
+        handledTerminations.remove(task.id)
     }
 
     public func copySelectedCommandLine() {
@@ -250,6 +262,8 @@ public final class EncodingQueueStore: ObservableObject {
 
     private func handleTermination(_ status: Int32, task: EncodingTask?) {
         guard let task else { return }
+        guard !handledTerminations.contains(task.id) else { return }
+        handledTerminations.insert(task.id)
         runningProcesses[task.id] = nil
         lastOutputUpdate[task.id] = nil
         task.completedAt = Date()
