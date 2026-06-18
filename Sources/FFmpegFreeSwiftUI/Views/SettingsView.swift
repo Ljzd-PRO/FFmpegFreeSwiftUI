@@ -70,15 +70,7 @@ public struct SettingsView: View {
                         .foregroundStyle(.secondary)
                 }
 
-                settingsSection("界面显示") {
-                    TextField(t("全局字体"), text: $settingsStore.settings.fontName)
-                    Picker(t("语言"), selection: normalizedLanguageBinding) {
-                        ForEach(AppLanguage.allCases) { language in
-                            Text(t(language.displayName)).tag(language.rawValue)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                }
+                displaySection
             }
             .padding(24)
             .textFieldStyle(.roundedBorder)
@@ -126,6 +118,140 @@ public struct SettingsView: View {
             get: { AppLanguage.normalize(settingsStore.settings.language).rawValue },
             set: { settingsStore.settings.language = AppLanguage.normalize($0).rawValue }
         )
+    }
+
+    private var appearanceBinding: Binding<String> {
+        Binding(
+            get: { AppAppearanceMode.normalize(settingsStore.settings.appearanceMode).rawValue },
+            set: { settingsStore.settings.appearanceMode = AppAppearanceMode.normalize($0).rawValue }
+        )
+    }
+
+    private var densityBinding: Binding<String> {
+        Binding(
+            get: { AppInterfaceDensity.normalize(settingsStore.settings.interfaceDensity).rawValue },
+            set: { settingsStore.settings.interfaceDensity = AppInterfaceDensity.normalize($0).rawValue }
+        )
+    }
+
+    private var fontSizeBinding: Binding<Double> {
+        Binding(
+            get: { settingsStore.settings.baseFontSize },
+            set: { settingsStore.settings.baseFontSize = max(11, min(18, $0)) }
+        )
+    }
+
+    private var displaySection: some View {
+        settingsSection("界面显示") {
+            Text(t("这些设置会立即应用到主窗口；字体名称留空或填 System 表示使用系统默认字体。"))
+                .font(.callout)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text(t("语言"))
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                Picker(t("语言"), selection: normalizedLanguageBinding) {
+                    ForEach(AppLanguage.allCases) { language in
+                        Text(t(language.displayName)).tag(language.rawValue)
+                    }
+                }
+                .labelsHidden()
+                .pickerStyle(.segmented)
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text(t("外观"))
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                Picker(t("外观"), selection: appearanceBinding) {
+                    ForEach(AppAppearanceMode.allCases) { mode in
+                        Text(t(mode.titleKey)).tag(mode.rawValue)
+                    }
+                }
+                .labelsHidden()
+                .pickerStyle(.segmented)
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text(t("界面密度"))
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                Picker(t("界面密度"), selection: densityBinding) {
+                    ForEach(AppInterfaceDensity.allCases) { density in
+                        Text(t(density.titleKey)).tag(density.rawValue)
+                    }
+                }
+                .labelsHidden()
+                .pickerStyle(.segmented)
+            }
+
+            Grid(alignment: .leading, horizontalSpacing: 14, verticalSpacing: 10) {
+                GridRow {
+                    Text(t("全局字体"))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 130, alignment: .leading)
+                    TextField("System", text: $settingsStore.settings.fontName)
+                        .frame(maxWidth: 360)
+                }
+                GridRow {
+                    Text(t("基础字号"))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 130, alignment: .leading)
+                    HStack {
+                        Slider(value: fontSizeBinding, in: 11...18, step: 1)
+                            .frame(maxWidth: 300)
+                        Stepper(value: fontSizeBinding, in: 11...18, step: 1) {
+                            Text("\(Int(settingsStore.settings.baseFontSize)) pt")
+                                .font(.system(.body, design: .monospaced))
+                        }
+                    }
+                }
+            }
+
+            displayPreview
+        }
+    }
+
+    private var displayPreview: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Image(systemName: "textformat.size")
+                    .foregroundStyle(Color.accentColor)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(t("显示预览"))
+                        .font(.headline)
+                    Text(t("编码队列、参数面板和工具页面会使用当前显示偏好。"))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+                Text(t(AppInterfaceDensity.normalize(settingsStore.settings.interfaceDensity).titleKey))
+                    .font(.caption.weight(.semibold))
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Color.accentColor.opacity(0.12))
+                    .clipShape(Capsule())
+            }
+            HStack(spacing: 10) {
+                previewChip("编码队列", icon: "list.bullet.rectangle")
+                previewChip("参数面板", icon: "slider.horizontal.3")
+                previewChip("媒体信息", icon: "info.circle")
+            }
+        }
+        .padding(14)
+        .background(Color(nsColor: .controlBackgroundColor))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+
+    private func previewChip(_ title: String, icon: String) -> some View {
+        Label(t(title), systemImage: icon)
+            .font(.caption.weight(.medium))
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(Color(nsColor: .textBackgroundColor))
+            .clipShape(RoundedRectangle(cornerRadius: 6))
     }
 
     private func refreshDetectedLocations(message: String = "") {

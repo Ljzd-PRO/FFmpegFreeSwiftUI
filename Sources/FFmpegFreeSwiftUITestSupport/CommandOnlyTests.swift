@@ -50,6 +50,9 @@ public func makeCommandOnlyTests() -> [TestCase] {
             try expectEqual(settings.maxConcurrentTasks, 2, "settings existing field")
             try expectEqual(settings.presetAutoLoadMode, 0, "preset auto load default")
             try expectEqual(settings.presetAutoLoadPath, "", "preset auto load path default")
+            try expectEqual(settings.appearanceMode, AppAppearanceMode.system.rawValue, "appearance mode default")
+            try expectEqual(settings.interfaceDensity, AppInterfaceDensity.regular.rawValue, "interface density default")
+            try expectEqual(settings.baseFontSize, 13, "base font size default")
             try expectEqual(settings.lastPreset.outputContainer, "mp4", "settings last preset")
         },
         TestCase("Settings coding", "Normalizes legacy language values") { _ in
@@ -60,9 +63,19 @@ public func makeCommandOnlyTests() -> [TestCase] {
             try expectEqual(tw.language, AppLanguage.traditionalChinese.rawValue, "zh-TW should become zh-Hant")
             try expectEqual(en.language, AppLanguage.english.rawValue, "en-US should become en")
         },
+        TestCase("Settings coding", "Normalizes display preference values") { _ in
+            let valid = try JSONDecoder().decode(AppSettings.self, from: Data(#"{"appearanceMode":"dark","interfaceDensity":"compact","baseFontSize":16}"#.utf8))
+            let invalid = try JSONDecoder().decode(AppSettings.self, from: Data(#"{"appearanceMode":"blue","interfaceDensity":"huge","baseFontSize":21}"#.utf8))
+            try expectEqual(valid.appearanceMode, AppAppearanceMode.dark.rawValue, "dark appearance")
+            try expectEqual(valid.interfaceDensity, AppInterfaceDensity.compact.rawValue, "compact density")
+            try expectEqual(valid.baseFontSize, 16, "valid font size")
+            try expectEqual(invalid.appearanceMode, AppAppearanceMode.system.rawValue, "invalid appearance defaults to system")
+            try expectEqual(invalid.interfaceDensity, AppInterfaceDensity.regular.rawValue, "invalid density defaults to regular")
+        },
         TestCase("Localization", "Translates common UI text") { _ in
             try expectEqual(L10n.text("设置", language: "en"), "Settings", "English settings")
             try expectEqual(L10n.text("导航", language: "en"), "Navigation", "English navigation")
+            try expectEqual(L10n.text("界面密度", language: "en"), "Interface density", "English interface density")
             try expectEqual(L10n.text("设置", language: "zh-Hant"), "設置", "Traditional Chinese settings")
             try expectEqual(L10n.text("编码队列", language: "zh-Hant"), "編碼隊列", "Traditional Chinese navigation")
             try expectEqual(L10n.text("设置", language: "zh-Hans"), "设置", "Simplified Chinese should keep source text")

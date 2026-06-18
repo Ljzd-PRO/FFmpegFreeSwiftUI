@@ -19,6 +19,9 @@ struct FFmpegFreeSwiftUIExecutableApp: App {
                 .environmentObject(appState.presetStore)
                 .environmentObject(appState.queueStore)
                 .environmentObject(appState.qualityStore)
+                .font(appFont)
+                .controlSize(controlSize)
+                .preferredColorScheme(colorScheme)
                 .frame(minWidth: 1200, minHeight: 700)
         }
         .windowStyle(.titleBar)
@@ -166,5 +169,36 @@ struct FFmpegFreeSwiftUIExecutableApp: App {
 
     private func t(_ key: String) -> String {
         L10n.text(key, language: language)
+    }
+
+    private var appFont: Font {
+        let size = max(11, min(18, appState.settingsStore.settings.baseFontSize))
+        let fontName = appState.settingsStore.settings.fontName.trimmingCharacters(in: .whitespacesAndNewlines)
+        if fontName.isEmpty || fontName == "System" {
+            return .system(size: size)
+        }
+        return .custom(fontName, size: size)
+    }
+
+    private var controlSize: ControlSize {
+        switch AppInterfaceDensity.normalize(appState.settingsStore.settings.interfaceDensity) {
+        case .compact:
+            return .small
+        case .regular:
+            return .regular
+        case .spacious:
+            return .large
+        }
+    }
+
+    private var colorScheme: ColorScheme? {
+        switch AppAppearanceMode.normalize(appState.settingsStore.settings.appearanceMode) {
+        case .system:
+            return nil
+        case .light:
+            return .light
+        case .dark:
+            return .dark
+        }
     }
 }
