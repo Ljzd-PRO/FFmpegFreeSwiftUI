@@ -35,6 +35,19 @@
 		A51000000000000000000002 /* ParameterPanelControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50000000000000000000002 /* ParameterPanelControls.swift */; };
 		A51000000000000000000003 /* ParameterOptionCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50000000000000000000003 /* ParameterOptionCatalog.swift */; };
 		A51000000000000000000004 /* ParameterPanelPanes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50000000000000000000004 /* ParameterPanelPanes.swift */; };
+		A61000000000000000000002 /* TestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000005 /* TestSupport.swift */; };
+		A61000000000000000000003 /* CommandOnlyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000006 /* CommandOnlyTests.swift */; };
+		A61000000000000000000004 /* RuntimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000007 /* RuntimeTests.swift */; };
+		B61000000000000000000001 /* CommandOnlyXCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000001 /* CommandOnlyXCTests.swift */; };
+		B61000000000000000000002 /* XCTestCaseRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000002 /* XCTestCaseRunner.swift */; };
+		B61000000000000000000003 /* TestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000005 /* TestSupport.swift */; };
+		B61000000000000000000004 /* CommandOnlyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000006 /* CommandOnlyTests.swift */; };
+		B61000000000000000000005 /* RuntimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000007 /* RuntimeTests.swift */; };
+		B61000000000000000000006 /* FFmpegRuntimeXCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000004 /* FFmpegRuntimeXCTests.swift */; };
+		B61000000000000000000007 /* XCTestCaseRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000002 /* XCTestCaseRunner.swift */; };
+		B61000000000000000000008 /* TestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000005 /* TestSupport.swift */; };
+		B61000000000000000000009 /* CommandOnlyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000006 /* CommandOnlyTests.swift */; };
+		B6100000000000000000000A /* RuntimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000007 /* RuntimeTests.swift */; };
 		AE607FCE9F15837FE607C01A /* PerformanceMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E152535A46DAA1A7EA8FEA2F /* PerformanceMonitor.swift */; };
 		B7F7642A7783EF0C295795A7 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D67A0C97724FBBA4D0753C3 /* AppSettings.swift */; };
 		CF505AD32FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF505AD12FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp.swift */; };
@@ -42,7 +55,40 @@
 		DF83C9BE26E5B679216F46D3 /* EncodingTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B6E6C7B6EF8DBE00475AB5 /* EncodingTask.swift */; };
 		F2345A65360D151D95611EA6 /* EncodeQueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46D7C293DB9AAE2994F3859C /* EncodeQueueView.swift */; };
 		F9F2CCBE0BD881B6D243E018 /* PresetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAEE752393C4B6B0FAEFB319 /* PresetData.swift */; };
+		C10000000000000000000001 /* QualityAssessment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000001 /* QualityAssessment.swift */; };
+		C10000000000000000000002 /* MuxingCommandBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000002 /* MuxingCommandBuilder.swift */; };
+		C10000000000000000000003 /* MergingCommandBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000003 /* MergingCommandBuilder.swift */; };
+		C10000000000000000000004 /* QualityAssessmentRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000004 /* QualityAssessmentRunner.swift */; };
+		C10000000000000000000005 /* QualityAssessmentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000005 /* QualityAssessmentStore.swift */; };
+		C10000000000000000000006 /* MergingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000006 /* MergingView.swift */; };
+		C10000000000000000000007 /* QualityAssessmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000007 /* QualityAssessmentView.swift */; };
+		C10000000000000000000008 /* PluginExtensionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000008 /* PluginExtensionView.swift */; };
+		C10000000000000000000009 /* ToolPageUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000009 /* ToolPageUtilities.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A66000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 46F86FAA6BBF9AC94A7E4595 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 42AEFBAE01D2DFD981F7DA7D;
+			remoteInfo = FFmpegFreeSwiftUI;
+		};
+		B66000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 46F86FAA6BBF9AC94A7E4595 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 42AEFBAE01D2DFD981F7DA7D;
+			remoteInfo = FFmpegFreeSwiftUI;
+		};
+		B66000000000000000000002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 46F86FAA6BBF9AC94A7E4595 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 42AEFBAE01D2DFD981F7DA7D;
+			remoteInfo = FFmpegFreeSwiftUI;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		0846263DA40BBFED8934BF94 /* FFprobeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFprobeService.swift; sourceTree = "<group>"; };
@@ -71,6 +117,14 @@
 		A50000000000000000000002 /* ParameterPanelControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterPanelControls.swift; sourceTree = "<group>"; };
 		A50000000000000000000003 /* ParameterOptionCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterOptionCatalog.swift; sourceTree = "<group>"; };
 		A50000000000000000000004 /* ParameterPanelPanes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterPanelPanes.swift; sourceTree = "<group>"; };
+		A60000000000000000000005 /* TestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSupport.swift; sourceTree = "<group>"; };
+		A60000000000000000000006 /* CommandOnlyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandOnlyTests.swift; sourceTree = "<group>"; };
+		A60000000000000000000007 /* RuntimeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeTests.swift; sourceTree = "<group>"; };
+		B60000000000000000000001 /* CommandOnlyXCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandOnlyXCTests.swift; sourceTree = "<group>"; };
+		B60000000000000000000002 /* XCTestCaseRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestCaseRunner.swift; sourceTree = "<group>"; };
+		B60000000000000000000003 /* FFmpegFreeSwiftUICommandOnlyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FFmpegFreeSwiftUICommandOnlyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B60000000000000000000004 /* FFmpegRuntimeXCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFmpegRuntimeXCTests.swift; sourceTree = "<group>"; };
+		B60000000000000000000005 /* FFmpegFreeSwiftUIFFmpegTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FFmpegFreeSwiftUIFFmpegTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4B6E6C7B6EF8DBE00475AB5 /* EncodingTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncodingTask.swift; sourceTree = "<group>"; };
 		A992C6E3067AC1FE5A8BB627 /* RemoteCommandServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommandServer.swift; sourceTree = "<group>"; };
 		AC4428A1AF57F7F697422435 /* PrepareFilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrepareFilesView.swift; sourceTree = "<group>"; };
@@ -81,10 +135,40 @@
 		E152535A46DAA1A7EA8FEA2F /* PerformanceMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceMonitor.swift; sourceTree = "<group>"; };
 		E68FD403BEEEB48255A3EE78 /* MainAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAppView.swift; sourceTree = "<group>"; };
 		EC52E7F08F6B79F25D026FA1 /* PresetIOService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetIOService.swift; sourceTree = "<group>"; };
+		C00000000000000000000001 /* QualityAssessment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QualityAssessment.swift; sourceTree = "<group>"; };
+		C00000000000000000000002 /* MuxingCommandBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuxingCommandBuilder.swift; sourceTree = "<group>"; };
+		C00000000000000000000003 /* MergingCommandBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MergingCommandBuilder.swift; sourceTree = "<group>"; };
+		C00000000000000000000004 /* QualityAssessmentRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QualityAssessmentRunner.swift; sourceTree = "<group>"; };
+		C00000000000000000000005 /* QualityAssessmentStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QualityAssessmentStore.swift; sourceTree = "<group>"; };
+		C00000000000000000000006 /* MergingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MergingView.swift; sourceTree = "<group>"; };
+		C00000000000000000000007 /* QualityAssessmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QualityAssessmentView.swift; sourceTree = "<group>"; };
+		C00000000000000000000008 /* PluginExtensionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginExtensionView.swift; sourceTree = "<group>"; };
+		C00000000000000000000009 /* ToolPageUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolPageUtilities.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		29B2D46AA747A59804D46E1F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A63000000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B63000000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B63000000000000000000002 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -98,6 +182,7 @@
 			isa = PBXGroup;
 			children = (
 				D685C104AFFBCF83C7CB0FB6 /* Sources */,
+				A60000000000000000000003 /* Tests */,
 				BF7A2D27A78D590BDEF15AF2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -108,6 +193,7 @@
 				9D67A0C97724FBBA4D0753C3 /* AppSettings.swift */,
 				A4B6E6C7B6EF8DBE00475AB5 /* EncodingTask.swift */,
 				CAEE752393C4B6B0FAEFB319 /* PresetData.swift */,
+				C00000000000000000000001 /* QualityAssessment.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -116,6 +202,8 @@
 			isa = PBXGroup;
 			children = (
 				B14165D862236CA1F6049109 /* FFmpegCommandBuilder.swift */,
+				C00000000000000000000003 /* MergingCommandBuilder.swift */,
+				C00000000000000000000002 /* MuxingCommandBuilder.swift */,
 				0DD21DAB1787A4261E487467 /* FFmpegLocator.swift */,
 				945CB9D38AAFE0EF90C4AEC0 /* FFmpegProgressParser.swift */,
 				A2CC605409D579B99B3B5A4F /* FFmpegRunner.swift */,
@@ -124,6 +212,7 @@
 				6B32C1A91352E8AC57462B6D /* OutputPathBuilder.swift */,
 				E152535A46DAA1A7EA8FEA2F /* PerformanceMonitor.swift */,
 				EC52E7F08F6B79F25D026FA1 /* PresetIOService.swift */,
+				C00000000000000000000004 /* QualityAssessmentRunner.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -134,6 +223,7 @@
 				260CB493CE9BCC92CD925DAE /* AppState.swift */,
 				B716282A65BA26F5FD16BE1E /* EncodingQueueStore.swift */,
 				91465DF5335C8B42DF85FEDA /* PresetStore.swift */,
+				C00000000000000000000005 /* QualityAssessmentStore.swift */,
 				A992C6E3067AC1FE5A8BB627 /* RemoteCommandServer.swift */,
 				4637CB2D630FFA0471A6493D /* SettingsStore.swift */,
 			);
@@ -147,13 +237,17 @@
 				7B92574834D7D4D738B816EE /* FFplayView.swift */,
 				E68FD403BEEEB48255A3EE78 /* MainAppView.swift */,
 				1CB2574719BEDBF40FECFB23 /* MediaInfoView.swift */,
+				C00000000000000000000006 /* MergingView.swift */,
 				A4288C35ABAAE04CE51C0360 /* MuxingView.swift */,
 				A50000000000000000000005 /* ParameterPanel */,
 				721AB875A980039CA8A52B05 /* PerformanceView.swift */,
+				C00000000000000000000008 /* PluginExtensionView.swift */,
+				C00000000000000000000007 /* QualityAssessmentView.swift */,
 				AC4428A1AF57F7F697422435 /* PrepareFilesView.swift */,
 				7ED7F5D4D70F86CF2E067448 /* SettingsView.swift */,
 				430D9466864BF1654E248C6A /* StartPageView.swift */,
 				14837993E6A68900A4E1D578 /* SupportersView.swift */,
+				C00000000000000000000009 /* ToolPageUtilities.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -195,6 +289,8 @@
 			isa = PBXGroup;
 			children = (
 				99006388588CE7D539A04F10 /* FFmpegFreeSwiftUI.app */,
+				B60000000000000000000003 /* FFmpegFreeSwiftUICommandOnlyTests.xctest */,
+				B60000000000000000000005 /* FFmpegFreeSwiftUIFFmpegTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -212,8 +308,53 @@
 			children = (
 				A50000000000000000000006 /* FFmpegFreeSwiftUI */,
 				CF505AD22FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp */,
+				A60000000000000000000008 /* FFmpegFreeSwiftUITestSupport */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		A60000000000000000000003 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				B60000000000000000000008 /* FFmpegFreeSwiftUIXCTestSupport */,
+				B60000000000000000000006 /* FFmpegFreeSwiftUICommandOnlyTests */,
+				B60000000000000000000007 /* FFmpegFreeSwiftUIFFmpegTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		B60000000000000000000008 /* FFmpegFreeSwiftUIXCTestSupport */ = {
+			isa = PBXGroup;
+			children = (
+				B60000000000000000000002 /* XCTestCaseRunner.swift */,
+			);
+			path = FFmpegFreeSwiftUIXCTestSupport;
+			sourceTree = "<group>";
+		};
+		B60000000000000000000006 /* FFmpegFreeSwiftUICommandOnlyTests */ = {
+			isa = PBXGroup;
+			children = (
+				B60000000000000000000001 /* CommandOnlyXCTests.swift */,
+			);
+			path = FFmpegFreeSwiftUICommandOnlyTests;
+			sourceTree = "<group>";
+		};
+		B60000000000000000000007 /* FFmpegFreeSwiftUIFFmpegTests */ = {
+			isa = PBXGroup;
+			children = (
+				B60000000000000000000004 /* FFmpegRuntimeXCTests.swift */,
+			);
+			path = FFmpegFreeSwiftUIFFmpegTests;
+			sourceTree = "<group>";
+		};
+		A60000000000000000000008 /* FFmpegFreeSwiftUITestSupport */ = {
+			isa = PBXGroup;
+			children = (
+				A60000000000000000000006 /* CommandOnlyTests.swift */,
+				A60000000000000000000007 /* RuntimeTests.swift */,
+				A60000000000000000000005 /* TestSupport.swift */,
+			);
+			path = FFmpegFreeSwiftUITestSupport;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -236,6 +377,42 @@
 			productReference = 99006388588CE7D539A04F10 /* FFmpegFreeSwiftUI.app */;
 			productType = "com.apple.product-type.application";
 		};
+		B64000000000000000000001 /* FFmpegFreeSwiftUICommandOnlyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B69000000000000000000001 /* Build configuration list for PBXNativeTarget "FFmpegFreeSwiftUICommandOnlyTests" */;
+			buildPhases = (
+				B62000000000000000000001 /* Sources */,
+				B63000000000000000000001 /* Frameworks */,
+				B65000000000000000000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B67000000000000000000001 /* PBXTargetDependency */,
+			);
+			name = FFmpegFreeSwiftUICommandOnlyTests;
+			productName = FFmpegFreeSwiftUICommandOnlyTests;
+			productReference = B60000000000000000000003 /* FFmpegFreeSwiftUICommandOnlyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		B64000000000000000000002 /* FFmpegFreeSwiftUIFFmpegTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B69000000000000000000002 /* Build configuration list for PBXNativeTarget "FFmpegFreeSwiftUIFFmpegTests" */;
+			buildPhases = (
+				B62000000000000000000002 /* Sources */,
+				B63000000000000000000002 /* Frameworks */,
+				B65000000000000000000002 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B67000000000000000000002 /* PBXTargetDependency */,
+			);
+			name = FFmpegFreeSwiftUIFFmpegTests;
+			productName = FFmpegFreeSwiftUIFFmpegTests;
+			productReference = B60000000000000000000005 /* FFmpegFreeSwiftUIFFmpegTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -248,6 +425,14 @@
 				TargetAttributes = {
 					42AEFBAE01D2DFD981F7DA7D = {
 						CreatedOnToolsVersion = 16.0;
+					};
+					B64000000000000000000001 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 42AEFBAE01D2DFD981F7DA7D;
+					};
+					B64000000000000000000002 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 42AEFBAE01D2DFD981F7DA7D;
 					};
 				};
 			};
@@ -265,12 +450,35 @@
 			projectRoot = "";
 			targets = (
 				42AEFBAE01D2DFD981F7DA7D /* FFmpegFreeSwiftUI */,
+				B64000000000000000000001 /* FFmpegFreeSwiftUICommandOnlyTests */,
+				B64000000000000000000002 /* FFmpegFreeSwiftUIFFmpegTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		66F8606E9F0A136E2228EBCB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A65000000000000000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B65000000000000000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B65000000000000000000002 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -287,7 +495,10 @@
 				B7F7642A7783EF0C295795A7 /* AppSettings.swift in Sources */,
 				DF83C9BE26E5B679216F46D3 /* EncodingTask.swift in Sources */,
 				F9F2CCBE0BD881B6D243E018 /* PresetData.swift in Sources */,
+				C10000000000000000000001 /* QualityAssessment.swift in Sources */,
 				626C141CF79AA4FDA3A8791D /* FFmpegCommandBuilder.swift in Sources */,
+				C10000000000000000000003 /* MergingCommandBuilder.swift in Sources */,
+				C10000000000000000000002 /* MuxingCommandBuilder.swift in Sources */,
 				5EA956F93B0347DBAB9020B3 /* FFmpegLocator.swift in Sources */,
 				0AFFBFA1D709AF48A5F63ACC /* FFmpegProgressParser.swift in Sources */,
 				A34A2DC5B92E167C686F88B8 /* FFmpegRunner.swift in Sources */,
@@ -296,15 +507,18 @@
 				3E38A78440969CCED79787AF /* OutputPathBuilder.swift in Sources */,
 				AE607FCE9F15837FE607C01A /* PerformanceMonitor.swift in Sources */,
 				5FB2DA41336A7FBB962ABEF5 /* PresetIOService.swift in Sources */,
+				C10000000000000000000004 /* QualityAssessmentRunner.swift in Sources */,
 				49CE1F0CB2481931C4A022EE /* AppState.swift in Sources */,
 				25ADBFAE5B2D543A75D6C64D /* EncodingQueueStore.swift in Sources */,
 				09988C2FB26FDDE4638C762D /* PresetStore.swift in Sources */,
+				C10000000000000000000005 /* QualityAssessmentStore.swift in Sources */,
 				7FC1021666304D9AF6A35D7E /* RemoteCommandServer.swift in Sources */,
 				42FB6292FB7B15B1F0DC024B /* SettingsStore.swift in Sources */,
 				938862640744A2A30BA50339 /* FileSizeFormatting.swift in Sources */,
 				3EF92273EE685A747D5C9374 /* ShellQuoting.swift in Sources */,
 				F2345A65360D151D95611EA6 /* EncodeQueueView.swift in Sources */,
 				D324F3D8E10B5689443F028D /* FFplayView.swift in Sources */,
+				C10000000000000000000006 /* MergingView.swift in Sources */,
 				A293BBF78CA3E301684FFAEA /* MuxingView.swift in Sources */,
 				919B12D14B280CEA87AB4F16 /* MainAppView.swift in Sources */,
 				746042AA80AB8AFF0183237D /* MediaInfoView.swift in Sources */,
@@ -314,15 +528,60 @@
 				A51000000000000000000003 /* ParameterOptionCatalog.swift in Sources */,
 				A51000000000000000000004 /* ParameterPanelPanes.swift in Sources */,
 				4F9E7EF261F552464F52DFA2 /* PerformanceView.swift in Sources */,
+				C10000000000000000000008 /* PluginExtensionView.swift in Sources */,
+				C10000000000000000000007 /* QualityAssessmentView.swift in Sources */,
 				CF505AD32FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp.swift in Sources */,
 				A0467DC0EF1172740B0861F1 /* PrepareFilesView.swift in Sources */,
 				69AE6448CFBFAF0000AA33EB /* SettingsView.swift in Sources */,
 				81BC48C200885A50F2464BF2 /* StartPageView.swift in Sources */,
 				680706CC0379B8A8D7C3ADED /* SupportersView.swift in Sources */,
+				C10000000000000000000009 /* ToolPageUtilities.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B62000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B61000000000000000000001 /* CommandOnlyXCTests.swift in Sources */,
+				B61000000000000000000002 /* XCTestCaseRunner.swift in Sources */,
+				B61000000000000000000003 /* TestSupport.swift in Sources */,
+				B61000000000000000000004 /* CommandOnlyTests.swift in Sources */,
+				B61000000000000000000005 /* RuntimeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B62000000000000000000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B61000000000000000000006 /* FFmpegRuntimeXCTests.swift in Sources */,
+				B61000000000000000000007 /* XCTestCaseRunner.swift in Sources */,
+				B61000000000000000000008 /* TestSupport.swift in Sources */,
+				B61000000000000000000009 /* CommandOnlyTests.swift in Sources */,
+				B6100000000000000000000A /* RuntimeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A67000000000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 42AEFBAE01D2DFD981F7DA7D /* FFmpegFreeSwiftUI */;
+			targetProxy = A66000000000000000000001 /* PBXContainerItemProxy */;
+		};
+		B67000000000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 42AEFBAE01D2DFD981F7DA7D /* FFmpegFreeSwiftUI */;
+			targetProxy = B66000000000000000000001 /* PBXContainerItemProxy */;
+		};
+		B67000000000000000000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 42AEFBAE01D2DFD981F7DA7D /* FFmpegFreeSwiftUI */;
+			targetProxy = B66000000000000000000002 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		17234DA728CB8FFFA593E13A /* Release */ = {
@@ -499,6 +758,122 @@
 			};
 			name = Debug;
 		};
+		B68000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = FFmpegFreeSwiftUICommandOnlyTests;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = top.ffmpegfreeui.FFmpegFreeSwiftUICommandOnlyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG XCODE_APP";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FFmpegFreeSwiftUI.app/Contents/MacOS/FFmpegFreeSwiftUI";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		B68000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = FFmpegFreeSwiftUICommandOnlyTests;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = top.ffmpegfreeui.FFmpegFreeSwiftUICommandOnlyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FFmpegFreeSwiftUI.app/Contents/MacOS/FFmpegFreeSwiftUI";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+		B68000000000000000000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = FFmpegFreeSwiftUIFFmpegTests;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = top.ffmpegfreeui.FFmpegFreeSwiftUIFFmpegTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG XCODE_APP";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FFmpegFreeSwiftUI.app/Contents/MacOS/FFmpegFreeSwiftUI";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		B68000000000000000000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = FFmpegFreeSwiftUIFFmpegTests;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = top.ffmpegfreeui.FFmpegFreeSwiftUIFFmpegTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FFmpegFreeSwiftUI.app/Contents/MacOS/FFmpegFreeSwiftUI";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -516,6 +891,24 @@
 			buildConfigurations = (
 				339F2120A275E8028CC42767 /* Debug */,
 				17234DA728CB8FFFA593E13A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B69000000000000000000001 /* Build configuration list for PBXNativeTarget "FFmpegFreeSwiftUICommandOnlyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B68000000000000000000001 /* Debug */,
+				B68000000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B69000000000000000000002 /* Build configuration list for PBXNativeTarget "FFmpegFreeSwiftUIFFmpegTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B68000000000000000000003 /* Debug */,
+				B68000000000000000000004 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

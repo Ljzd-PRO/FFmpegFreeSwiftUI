@@ -1,86 +1,167 @@
+import Darwin
 import Foundation
 
 public struct PerformanceSnapshot: Equatable, Sendable {
-    public var cpuLoadText: String
-    public var memoryText: String
-    public var diskText: String
-    public var processCountText: String
-    public var gpuText: String
+    public var cpuUsage: Double
+    public var coreUsages: [Double]
+    public var loadAverageText: String
+    public var memoryUsedBytes: UInt64
+    public var memoryTotalBytes: UInt64
+    public var diskUsedBytes: UInt64
+    public var diskTotalBytes: UInt64
+    public var runningQueueTasks: Int
+    public var pendingQueueTasks: Int
+    public var sampledAt: Date
 
     public static let empty = PerformanceSnapshot(
-        cpuLoadText: "N/A",
-        memoryText: "N/A",
-        diskText: "N/A",
-        processCountText: "N/A",
-        gpuText: "macOS 首版未读取 GPU/显存"
+        cpuUsage: 0,
+        coreUsages: [],
+        loadAverageText: "N/A",
+        memoryUsedBytes: 0,
+        memoryTotalBytes: 0,
+        diskUsedBytes: 0,
+        diskTotalBytes: 0,
+        runningQueueTasks: 0,
+        pendingQueueTasks: 0,
+        sampledAt: Date()
     )
+
+    public var memoryUsage: Double {
+        guard memoryTotalBytes > 0 else { return 0 }
+        return min(max(Double(memoryUsedBytes) / Double(memoryTotalBytes), 0), 1)
+    }
+
+    public var diskUsage: Double {
+        guard diskTotalBytes > 0 else { return 0 }
+        return min(max(Double(diskUsedBytes) / Double(diskTotalBytes), 0), 1)
+    }
+
+    public var memoryText: String {
+        "\(FileSizeFormatting.bytesText(memoryUsedBytes)) / \(FileSizeFormatting.bytesText(memoryTotalBytes))"
+    }
+
+    public var diskText: String {
+        "\(FileSizeFormatting.bytesText(diskUsedBytes)) / \(FileSizeFormatting.bytesText(diskTotalBytes))"
+    }
 }
 
-public struct PerformanceMonitor: Sendable {
+public actor PerformanceMonitor {
+    private var previousCPULoads: [CPULoad] = []
+
     public init() {}
 
-    public func snapshot() async -> PerformanceSnapshot {
-        async let memory = runText(path: "/usr/bin/vm_stat", arguments: [])
-        async let processList = runText(path: "/bin/ps", arguments: ["-ax"])
-        let memoryText = await memory
-            .split(separator: "\n")
-            .prefix(4)
-            .joined(separator: " | ")
-        let processLines = await processList.split(separator: "\n")
+    public func snapshot(runningQueueTasks: Int = 0, pendingQueueTasks: Int = 0) async -> PerformanceSnapshot {
+        let cpu = cpuUsage()
+        let memory = memoryUsage()
+        let disk = diskUsage()
+
         return PerformanceSnapshot(
-            cpuLoadText: loadAverage(),
-            memoryText: memoryText.isEmpty ? "N/A" : memoryText,
-            diskText: diskUsage(),
-            processCountText: "\(max(processLines.count - 1, 0))",
-            gpuText: "N/A"
+            cpuUsage: cpu.total,
+            coreUsages: cpu.cores,
+            loadAverageText: loadAverage(),
+            memoryUsedBytes: memory.used,
+            memoryTotalBytes: memory.total,
+            diskUsedBytes: disk.used,
+            diskTotalBytes: disk.total,
+            runningQueueTasks: runningQueueTasks,
+            pendingQueueTasks: pendingQueueTasks,
+            sampledAt: Date()
         )
+    }
+
+    private func cpuUsage() -> (total: Double, cores: [Double]) {
+        guard let current = readCPULoads(), !current.isEmpty else {
+            return (0, [])
+        }
+        defer { previousCPULoads = current }
+        guard previousCPULoads.count == current.count else {
+            return (0, Array(repeating: 0, count: current.count))
+        }
+
+        let coreUsages = zip(previousCPULoads, current).map { previous, next -> Double in
+            let user = next.user - previous.user
+            let system = next.system - previous.system
+            let nice = next.nice - previous.nice
+            let idle = next.idle - previous.idle
+            let total = user + system + nice + idle
+            guard total > 0 else { return 0 }
+            return min(max(Double(user + system + nice) / Double(total), 0), 1)
+        }
+        let totalUsage = coreUsages.isEmpty ? 0 : coreUsages.reduce(0, +) / Double(coreUsages.count)
+        return (totalUsage, coreUsages)
+    }
+
+    private func readCPULoads() -> [CPULoad]? {
+        var cpuInfo: processor_info_array_t?
+        var cpuInfoCount: mach_msg_type_number_t = 0
+        var processorCount: natural_t = 0
+        let result = host_processor_info(
+            mach_host_self(),
+            PROCESSOR_CPU_LOAD_INFO,
+            &processorCount,
+            &cpuInfo,
+            &cpuInfoCount
+        )
+        guard result == KERN_SUCCESS, let cpuInfo else { return nil }
+        defer {
+            let bytes = vm_size_t(cpuInfoCount) * vm_size_t(MemoryLayout<integer_t>.stride)
+            vm_deallocate(mach_task_self_, vm_address_t(bitPattern: cpuInfo), bytes)
+        }
+
+        var loads: [CPULoad] = []
+        for index in 0..<Int(processorCount) {
+            let offset = index * Int(CPU_STATE_MAX)
+            loads.append(
+                CPULoad(
+                    user: UInt64(cpuInfo[offset + Int(CPU_STATE_USER)]),
+                    system: UInt64(cpuInfo[offset + Int(CPU_STATE_SYSTEM)]),
+                    idle: UInt64(cpuInfo[offset + Int(CPU_STATE_IDLE)]),
+                    nice: UInt64(cpuInfo[offset + Int(CPU_STATE_NICE)])
+                )
+            )
+        }
+        return loads
+    }
+
+    private func memoryUsage() -> (used: UInt64, total: UInt64) {
+        var size = MemoryLayout<UInt64>.size
+        var total: UInt64 = 0
+        sysctlbyname("hw.memsize", &total, &size, nil, 0)
+
+        var stats = vm_statistics64()
+        var count = mach_msg_type_number_t(MemoryLayout<vm_statistics64_data_t>.size / MemoryLayout<integer_t>.size)
+        let result = withUnsafeMutablePointer(to: &stats) {
+            $0.withMemoryRebound(to: integer_t.self, capacity: Int(count)) {
+                host_statistics64(mach_host_self(), HOST_VM_INFO64, $0, &count)
+            }
+        }
+        guard result == KERN_SUCCESS else { return (0, total) }
+        let pageSize = UInt64(vm_kernel_page_size)
+        let free = UInt64(stats.free_count + stats.inactive_count) * pageSize
+        return (total > free ? total - free : 0, total)
+    }
+
+    private func diskUsage() -> (used: UInt64, total: UInt64) {
+        do {
+            let attrs = try FileManager.default.attributesOfFileSystem(forPath: NSHomeDirectory())
+            let free = (attrs[.systemFreeSize] as? NSNumber)?.uint64Value ?? 0
+            let size = (attrs[.systemSize] as? NSNumber)?.uint64Value ?? 0
+            return (size > free ? size - free : 0, size)
+        } catch {
+            return (0, 0)
+        }
     }
 
     private func loadAverage() -> String {
         var loads = [Double](repeating: 0, count: 3)
-        getloadavg(&loads, 3)
+        guard getloadavg(&loads, 3) == 3 else { return "N/A" }
         return String(format: "%.2f / %.2f / %.2f", loads[0], loads[1], loads[2])
     }
+}
 
-    private func diskUsage() -> String {
-        do {
-            let attrs = try FileManager.default.attributesOfFileSystem(forPath: NSHomeDirectory())
-            let free = attrs[.systemFreeSize] as? NSNumber
-            let size = attrs[.systemSize] as? NSNumber
-            guard let free, let size else { return "N/A" }
-            let used = size.int64Value - free.int64Value
-            let usedGB = Double(used) / 1_073_741_824
-            let totalGB = Double(size.int64Value) / 1_073_741_824
-            return String(format: "%.1f / %.1f GB", usedGB, totalGB)
-        } catch {
-            return "N/A"
-        }
-    }
-
-    private func runText(path: String, arguments: [String]) async -> String {
-        await withTaskGroup(of: String.self) { group in
-            group.addTask {
-                let process = Process()
-                process.executableURL = URL(fileURLWithPath: path)
-                process.arguments = arguments
-                let pipe = Pipe()
-                process.standardOutput = pipe
-                do {
-                    try process.run()
-                    process.waitUntilExit()
-                    let data = pipe.fileHandleForReading.readDataToEndOfFile()
-                    return String(data: data, encoding: .utf8) ?? ""
-                } catch {
-                    return ""
-                }
-            }
-            group.addTask {
-                try? await Task.sleep(nanoseconds: 800_000_000)
-                return ""
-            }
-            let first = await group.next() ?? ""
-            group.cancelAll()
-            return first
-        }
-    }
+private struct CPULoad: Equatable {
+    var user: UInt64
+    var system: UInt64
+    var idle: UInt64
+    var nice: UInt64
 }

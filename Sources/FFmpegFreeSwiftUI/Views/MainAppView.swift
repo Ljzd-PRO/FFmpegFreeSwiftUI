@@ -23,13 +23,12 @@ public struct MainAppView: View {
     @EnvironmentObject private var settingsStore: SettingsStore
     @EnvironmentObject private var presetStore: PresetStore
     @EnvironmentObject private var queueStore: EncodingQueueStore
-    @State private var selection: MainSection? = .start
 
     public init() {}
 
     public var body: some View {
         NavigationSplitView {
-            List(selection: $selection) {
+            List(selection: $appState.selectedSection) {
                 Section("FFmpegFreeSwiftUI") {
                     ForEach(MainSection.allCases) { section in
                         NavigationLink(value: section) {
@@ -41,7 +40,7 @@ public struct MainAppView: View {
             .navigationSplitViewColumnWidth(min: 210, ideal: 230)
         } detail: {
             Group {
-                switch selection ?? .start {
+                switch appState.selectedSection ?? .start {
                 case .start:
                     StartPageView()
                 case .encodeQueue:
@@ -70,7 +69,7 @@ public struct MainAppView: View {
                     SupportersView()
                 }
             }
-            .navigationTitle(selection?.rawValue ?? "FFmpegFreeSwiftUI")
+            .navigationTitle(appState.selectedSection?.rawValue ?? "FFmpegFreeSwiftUI")
         }
     }
 

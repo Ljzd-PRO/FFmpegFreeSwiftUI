@@ -34,17 +34,6 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B64000000000000000000001"
-               BuildableName = "FFmpegFreeSwiftUICommandOnlyTests.xctest"
-               BlueprintName = "FFmpegFreeSwiftUICommandOnlyTests"
-               ReferencedContainer = "container:FFmpegFreeSwiftUI.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "B64000000000000000000002"
                BuildableName = "FFmpegFreeSwiftUIFFmpegTests.xctest"
                BlueprintName = "FFmpegFreeSwiftUIFFmpegTests"
@@ -63,6 +52,18 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "FFMPEGFREE_TEST_MODE"
+            value = "with-ffmpeg"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "FFMPEGFREE_FFMPEG_PATH"
+            value = "/opt/homebrew/bin/ffmpeg"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference

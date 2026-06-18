@@ -6,7 +6,7 @@ public enum FFmpegTool: String, CaseIterable, Sendable {
     case ffplay
 }
 
-public struct FFmpegLocator {
+public struct FFmpegLocator: @unchecked Sendable {
     public var settings: AppSettings
     public var fileManager: FileManager
 

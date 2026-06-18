@@ -6,17 +6,26 @@ public final class AppState: ObservableObject {
     public let settingsStore: SettingsStore
     public let presetStore: PresetStore
     public let queueStore: EncodingQueueStore
+    public let qualityStore: QualityAssessmentStore
     public let remoteServer: RemoteCommandServer
+    @Published public var selectedSection: MainSection? = .start
 
     public init() {
         let settings = SettingsStore()
         let preset = PresetStore(settingsStore: settings)
         let queue = EncodingQueueStore(settingsStore: settings)
+        let quality = QualityAssessmentStore(settingsStore: settings)
         settingsStore = settings
         presetStore = preset
         queueStore = queue
+        qualityStore = quality
         remoteServer = RemoteCommandServer(queueStore: queue)
         remoteServer.update(enabled: settings.settings.remoteCallEnabled, port: settings.settings.remotePort)
+        quality.refreshFilterAvailability()
+    }
+
+    public func navigate(to section: MainSection) {
+        selectedSection = section
     }
 
     public func presentOpenPanelForQueue() {

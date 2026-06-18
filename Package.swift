@@ -16,6 +16,11 @@ let package = Package(
             name: "FFmpegFreeSwiftUI",
             path: "Sources/FFmpegFreeSwiftUI"
         ),
+        .target(
+            name: "FFmpegFreeSwiftUITestSupport",
+            dependencies: ["FFmpegFreeSwiftUI"],
+            path: "Sources/FFmpegFreeSwiftUITestSupport"
+        ),
         .executableTarget(
             name: "FFmpegFreeSwiftUIApp",
             dependencies: ["FFmpegFreeSwiftUI"],
@@ -23,7 +28,7 @@ let package = Package(
         ),
         .executableTarget(
             name: "FFmpegFreeSwiftUITestRunner",
-            dependencies: ["FFmpegFreeSwiftUI"],
+            dependencies: ["FFmpegFreeSwiftUITestSupport"],
             path: "Sources/FFmpegFreeSwiftUITestRunner"
         )
     ]

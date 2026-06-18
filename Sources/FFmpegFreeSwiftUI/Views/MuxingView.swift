@@ -2,166 +2,149 @@ import SwiftUI
 
 public struct MuxingView: View {
     @EnvironmentObject private var queueStore: EncodingQueueStore
-    @State private var input = ""
-    @State private var extraInputs = ""
+    @State private var inputs: [MuxingInput] = []
+    @State private var selectedID: MuxingInput.ID?
     @State private var output = ""
+    @State private var statusMessage = ""
+    private let builder = MuxingCommandBuilder()
 
     public init() {}
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text("混流")
-                .font(.title2.weight(.semibold))
-            TextField("主输入文件", text: $input)
-                .textFieldStyle(.roundedBorder)
-            TextField("附加输入参数，如 -i subtitle.srt -i audio.m4a", text: $extraInputs)
-                .textFieldStyle(.roundedBorder)
-            TextField("输出文件", text: $output)
-                .textFieldStyle(.roundedBorder)
+            ToolBanner(text: "仅提供最基础的混流，高级功能请移步 MKVToolNix GUI；分离请用 MKVExtract GUI")
+
             HStack {
-                Button("选择主输入") { openFile { input = $0 } }
-                Button("选择输出") { saveFile { output = $0 } }
-                Button("加入队列") { addTask() }
-                    .disabled(input.isEmpty || output.isEmpty)
+                Button("添加文件") { ToolFilePanels.openFiles(addFiles) }
+                Button("上移") { moveSelection(offset: -1) }.disabled(selectedID == nil)
+                Button("下移") { moveSelection(offset: 1) }.disabled(selectedID == nil)
+                Button("移除") { removeSelection() }.disabled(selectedID == nil)
+                Spacer()
+                if !statusMessage.isEmpty {
+                    StatusPill(text: statusMessage, color: .green)
+                }
             }
             .buttonStyle(.bordered)
-            Spacer()
-        }
-        .padding(24)
-    }
 
-    private func addTask() {
-        let args = "-hide_banner -nostdin -i \(ShellQuoting.quote(input)) \(extraInputs) -c copy \(ShellQuoting.quote(output)) -y"
-        queueStore.addCommandTask(arguments: args, displayName: "混流任务", outputPath: output, inputPath: input)
-    }
-}
+            Table(inputs, selection: $selectedID) {
+                TableColumn("文件") { input in
+                    Text(input.path)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                }
+                TableColumn("视频流") { input in Text(input.videoStreams.isEmpty ? "-" : input.videoStreams) }
+                    .width(80)
+                TableColumn("音频流") { input in Text(input.audioStreams.isEmpty ? "-" : input.audioStreams) }
+                    .width(80)
+                TableColumn("字幕流") { input in Text(input.subtitleStreams.isEmpty ? "-" : input.subtitleStreams) }
+                    .width(80)
+                TableColumn("章节") { input in Text(input.usesChapters ? "使用此" : "-") }
+                    .width(70)
+                TableColumn("元数据") { input in Text(input.usesMetadata ? "使用此" : "-") }
+                    .width(80)
+            }
+            .frame(minHeight: 260)
+            .acceptsFileDrops(addFiles)
+            .onDeleteCommand { removeSelection() }
 
-public struct MergingView: View {
-    @EnvironmentObject private var queueStore: EncodingQueueStore
-    @State private var files: [String] = []
-    @State private var output = ""
+            GroupBox("选中项流控制") {
+                if let binding = selectedInputBinding {
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack {
+                            streamField("视频流索引号", text: binding.videoStreams)
+                            streamField("音频流索引号", text: binding.audioStreams)
+                            streamField("字幕流索引号", text: binding.subtitleStreams)
+                        }
+                        HStack {
+                            Toggle("使用此文件的章节", isOn: Binding(
+                                get: { binding.wrappedValue.usesChapters },
+                                set: { setChapters(binding.wrappedValue.id, enabled: $0) }
+                            ))
+                            Toggle("使用此文件的元数据", isOn: Binding(
+                                get: { binding.wrappedValue.usesMetadata },
+                                set: { setMetadata(binding.wrappedValue.id, enabled: $0) }
+                            ))
+                            Spacer()
+                        }
+                    }
+                    .padding(8)
+                } else {
+                    Text("添加输入文件，然后选中来编辑要使用哪些流，使用键盘 F3 和 F4 来排序，Delete 来移除")
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(8)
+                }
+            }
 
-    public init() {}
-
-    public var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            Text("合并")
-                .font(.title2.weight(.semibold))
             HStack {
-                Button("添加片段") { openFiles { files.append(contentsOf: $0) } }
-                Button("清空") { files.removeAll() }
-                TextField("输出文件", text: $output)
+                TextField("输出到目标位置", text: $output)
                     .textFieldStyle(.roundedBorder)
-                Button("选择输出") { saveFile { output = $0 } }
-                Button("加入队列") { addTask() }
-                    .disabled(files.isEmpty || output.isEmpty)
+                Button("选择位置") { ToolFilePanels.saveFile { output = $0 } }
+                Button("启动混流") { addTask() }
+                    .disabled(inputs.isEmpty || output.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    .keyboardShortcut(.return, modifiers: [.command])
             }
             .buttonStyle(.bordered)
-            List(files, id: \.self) { path in
-                Text(path)
-                    .lineLimit(1)
-            }
-            Spacer()
-        }
-        .padding(24)
-    }
-
-    private func addTask() {
-        let temp = FileManager.default.temporaryDirectory.appendingPathComponent("ffmpeg_concat_demuxer_\(UUID().uuidString).txt")
-        let body = files.map { "file '\($0.replacingOccurrences(of: "'", with: "'\\''"))'" }.joined(separator: "\n")
-        try? body.write(to: temp, atomically: true, encoding: .utf8)
-        let args = "-hide_banner -nostdin -f concat -safe 0 -i \(ShellQuoting.quote(temp.path)) -c copy \(ShellQuoting.quote(output)) -y"
-        queueStore.addCommandTask(arguments: args, displayName: "合并任务", outputPath: output)
-    }
-}
-
-public struct QualityAssessmentView: View {
-    @EnvironmentObject private var queueStore: EncodingQueueStore
-    @State private var reference = ""
-    @State private var distorted = ""
-    @State private var metric = "ssim"
-    @State private var output = "-"
-
-    public init() {}
-
-    public var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            Text("画质评测")
-                .font(.title2.weight(.semibold))
-            TextField("参考文件", text: $reference)
-                .textFieldStyle(.roundedBorder)
-            TextField("待评测文件", text: $distorted)
-                .textFieldStyle(.roundedBorder)
-            Picker("指标", selection: $metric) {
-                Text("SSIM").tag("ssim")
-                Text("PSNR").tag("psnr")
-                Text("VMAF").tag("libvmaf")
-            }
-            .pickerStyle(.segmented)
-            TextField("输出日志文件，留空或 - 表示控制台", text: $output)
-                .textFieldStyle(.roundedBorder)
-            HStack {
-                Button("选择参考") { openFile { reference = $0 } }
-                Button("选择待评测") { openFile { distorted = $0 } }
-                Button("加入队列") { addTask() }
-                    .disabled(reference.isEmpty || distorted.isEmpty)
-            }
-            .buttonStyle(.bordered)
-            Spacer()
-        }
-        .padding(24)
-    }
-
-    private func addTask() {
-        let filter = metric == "libvmaf" ? "libvmaf" : "\(metric)"
-        let log = output.isEmpty ? "-" : output
-        let args = "-hide_banner -nostdin -i \(ShellQuoting.quote(distorted)) -i \(ShellQuoting.quote(reference)) -lavfi \(ShellQuoting.quote(filter)) -f null \(ShellQuoting.quote(log)) -y"
-        queueStore.addCommandTask(arguments: args, displayName: "画质评测任务", outputPath: log, inputPath: distorted)
-    }
-}
-
-public struct PluginExtensionView: View {
-    public init() {}
-
-    public var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("插件扩展")
-                .font(.title2.weight(.semibold))
-            Text("旧版 Windows .3fui.dll 反射插件不兼容 macOS SwiftUI 首版。当前保留页面和内部队列 API，后续可设计 Swift 原生插件方案。")
-                .foregroundStyle(.secondary)
-                .textSelection(.enabled)
-            Spacer()
         }
         .padding(24)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .onMoveCommand { direction in
+            if direction == .up { moveSelection(offset: -1) }
+            if direction == .down { moveSelection(offset: 1) }
+        }
     }
-}
 
-private func openFile(_ completion: @escaping (String) -> Void) {
-    let panel = NSOpenPanel()
-    panel.canChooseFiles = true
-    panel.canChooseDirectories = false
-    panel.begin { response in
-        guard response == .OK, let url = panel.url else { return }
-        completion(url.path)
+    private var selectedInputBinding: Binding<MuxingInput>? {
+        guard let selectedID, let index = inputs.firstIndex(where: { $0.id == selectedID }) else { return nil }
+        return $inputs[index]
     }
-}
 
-private func openFiles(_ completion: @escaping ([String]) -> Void) {
-    let panel = NSOpenPanel()
-    panel.allowsMultipleSelection = true
-    panel.canChooseFiles = true
-    panel.canChooseDirectories = false
-    panel.begin { response in
-        guard response == .OK else { return }
-        completion(panel.urls.map(\.path))
+    private func streamField(_ title: String, text: Binding<String>) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            TextField("多个流用英文逗号隔开", text: text)
+                .textFieldStyle(.roundedBorder)
+        }
     }
-}
 
-private func saveFile(_ completion: @escaping (String) -> Void) {
-    let panel = NSSavePanel()
-    panel.begin { response in
-        guard response == .OK, let url = panel.url else { return }
-        completion(url.path)
+    private func addFiles(_ paths: [String]) {
+        for path in paths where !inputs.contains(where: { $0.path == path }) {
+            inputs.append(MuxingInput(path: path))
+        }
+        selectedID = inputs.last?.id
+        statusMessage = paths.isEmpty ? "" : "已添加 \(paths.count) 个文件"
+    }
+
+    private func moveSelection(offset: Int) {
+        guard let selectedID, let index = inputs.firstIndex(where: { $0.id == selectedID }) else { return }
+        let next = index + offset
+        guard inputs.indices.contains(next) else { return }
+        inputs.swapAt(index, next)
+    }
+
+    private func removeSelection() {
+        guard let selectedID else { return }
+        inputs.removeAll { $0.id == selectedID }
+        self.selectedID = inputs.first?.id
+    }
+
+    private func setChapters(_ id: UUID, enabled: Bool) {
+        for index in inputs.indices {
+            inputs[index].usesChapters = enabled && inputs[index].id == id
+        }
+    }
+
+    private func setMetadata(_ id: UUID, enabled: Bool) {
+        for index in inputs.indices {
+            inputs[index].usesMetadata = enabled && inputs[index].id == id
+        }
+    }
+
+    private func addTask() {
+        let args = builder.build(inputs: inputs, output: output)
+        queueStore.addCommandTask(arguments: args, displayName: "混流任务", outputPath: output, inputPath: inputs.first?.path ?? "")
+        statusMessage = "已加入编码队列"
     }
 }

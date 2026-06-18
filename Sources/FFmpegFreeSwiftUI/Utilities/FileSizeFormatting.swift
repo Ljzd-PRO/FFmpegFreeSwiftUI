@@ -1,6 +1,10 @@
 import Foundation
 
 public enum FileSizeFormatting {
+    public static func bytesText(_ bytes: UInt64) -> String {
+        sizeText(kilobytes: Int64(bytes / 1024))
+    }
+
     public static func sizeText(kilobytes: Int64) -> String {
         if kilobytes >= 1_048_576 {
             return String(format: "%.2f GB", Double(kilobytes) / 1_048_576.0)

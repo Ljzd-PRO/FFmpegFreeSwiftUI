@@ -60,6 +60,10 @@ public enum ShellQuoting {
         return result
     }
 
+    public static func joinArguments(_ values: [String]) -> String {
+        values.map(quote).joined(separator: " ")
+    }
+
     public static func ffmpegFilterPath(_ path: String) -> String {
         path
             .replacingOccurrences(of: "\\", with: "\\\\")
