@@ -1,4 +1,5 @@
 import AppKit
+import Combine
 import Foundation
 
 @MainActor
@@ -9,6 +10,7 @@ public final class AppState: ObservableObject {
     public let qualityStore: QualityAssessmentStore
     public let remoteServer: RemoteCommandServer
     @Published public var selectedSection: MainSection? = .start
+    private var settingsCancellable: AnyCancellable?
 
     public init() {
         let settings = SettingsStore()
@@ -20,6 +22,9 @@ public final class AppState: ObservableObject {
         queueStore = queue
         qualityStore = quality
         remoteServer = RemoteCommandServer(queueStore: queue)
+        settingsCancellable = settings.objectWillChange.sink { [weak self] _ in
+            self?.objectWillChange.send()
+        }
         remoteServer.update(enabled: settings.settings.remoteCallEnabled, port: settings.settings.remotePort)
         quality.refreshFilterAvailability()
     }

@@ -6,6 +6,21 @@ public enum FFmpegTool: String, CaseIterable, Sendable {
     case ffplay
 }
 
+public enum FFmpegLocationSource: String, Sendable {
+    case userOverride
+    case appSibling
+    case pathEnvironment
+    case commonDirectory
+    case fallback
+}
+
+public struct FFmpegToolLocation: Equatable, Sendable {
+    public var tool: FFmpegTool
+    public var path: String
+    public var source: FFmpegLocationSource
+    public var isExecutable: Bool
+}
+
 public struct FFmpegLocator: @unchecked Sendable {
     public var settings: AppSettings
     public var fileManager: FileManager
@@ -16,22 +31,52 @@ public struct FFmpegLocator: @unchecked Sendable {
     }
 
     public func locate(_ tool: FFmpegTool) -> String {
+        location(for: tool).path
+    }
+
+    public func location(for tool: FFmpegTool) -> FFmpegToolLocation {
         if let override = overridePath(for: tool), fileManager.isExecutableFile(atPath: override) {
-            return override
+            return FFmpegToolLocation(tool: tool, path: override, source: .userOverride, isExecutable: true)
         }
 
-        let bundleSibling = Bundle.main.bundleURL.deletingLastPathComponent().appendingPathComponent(tool.rawValue).path
-        if fileManager.isExecutableFile(atPath: bundleSibling) {
-            return bundleSibling
+        for candidate in appSiblingCandidates(for: tool.rawValue) {
+            if fileManager.isExecutableFile(atPath: candidate) {
+                return FFmpegToolLocation(tool: tool, path: candidate, source: .appSibling, isExecutable: true)
+            }
         }
 
         for candidate in pathCandidates(for: tool.rawValue) {
             if fileManager.isExecutableFile(atPath: candidate) {
-                return candidate
+                return FFmpegToolLocation(tool: tool, path: candidate, source: .pathEnvironment, isExecutable: true)
             }
         }
 
-        return tool.rawValue
+        for candidate in commonCandidates(for: tool.rawValue) {
+            if fileManager.isExecutableFile(atPath: candidate) {
+                return FFmpegToolLocation(tool: tool, path: candidate, source: .commonDirectory, isExecutable: true)
+            }
+        }
+
+        return FFmpegToolLocation(tool: tool, path: tool.rawValue, source: .fallback, isExecutable: false)
+    }
+
+    public func locations() -> [FFmpegToolLocation] {
+        FFmpegTool.allCases.map(location(for:))
+    }
+
+    public func bestSiblingPath(for tool: FFmpegTool, basedOn path: String) -> String {
+        path.replacingLastPathComponent(with: tool.rawValue)
+    }
+
+    private func appSiblingCandidates(for executable: String) -> [String] {
+        let bundleDirectory = Bundle.main.bundleURL.deletingLastPathComponent()
+        return [
+            bundleDirectory.appendingPathComponent(executable).path,
+            bundleDirectory.appendingPathComponent("\(executable).app").path,
+            bundleDirectory.appendingPathComponent("bin").appendingPathComponent(executable).path,
+            Bundle.main.bundleURL.appendingPathComponent("Contents/Resources").appendingPathComponent(executable).path,
+            Bundle.main.bundleURL.appendingPathComponent("Contents/MacOS").appendingPathComponent(executable).path
+        ]
     }
 
     private func overridePath(for tool: FFmpegTool) -> String? {
@@ -46,8 +91,19 @@ public struct FFmpegLocator: @unchecked Sendable {
     }
 
     private func pathCandidates(for executable: String) -> [String] {
-        let pathValue = ProcessInfo.processInfo.environment["PATH"] ?? "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-        return pathValue.split(separator: ":").map { String($0) + "/" + executable }
+        let fallbackPath = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/local/bin"
+        let pathValue = ProcessInfo.processInfo.environment["PATH"].flatMap(\.nonEmpty) ?? fallbackPath
+        return pathValue.split(separator: ":").map { URL(fileURLWithPath: String($0)).appendingPathComponent(executable).path }
+    }
+
+    private func commonCandidates(for executable: String) -> [String] {
+        [
+            "/opt/homebrew/bin/\(executable)",
+            "/usr/local/bin/\(executable)",
+            "/opt/local/bin/\(executable)",
+            "/usr/bin/\(executable)",
+            "/bin/\(executable)"
+        ]
     }
 }
 

@@ -7,22 +7,27 @@ func normalizeOptionNameInput(_ value: String) -> String {
 }
 
 struct OverviewPane: View {
+    @EnvironmentObject private var settingsStore: SettingsStore
     @Binding var preset: PresetData
     private let builder = FFmpegCommandBuilder()
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("参数总览")
+            Text(t("参数总览"))
                 .font(.title2.weight(.semibold))
             Text(builder.overview(preset: preset))
                 .font(.system(.body, design: .monospaced))
                 .textSelection(.enabled)
-            Text("实际命令行")
+            Text(t("实际命令行"))
                 .font(.headline)
             Text(builder.build(preset: preset, input: "<InputFile>", output: "<OutputFile>"))
                 .font(.system(.body, design: .monospaced))
                 .textSelection(.enabled)
         }
+    }
+
+    private func t(_ key: String) -> String {
+        L10n.text(key, language: settingsStore.settings.language)
     }
 }
 
@@ -345,7 +350,7 @@ struct CustomArgumentsPane: View {
             FormRow(label: "音频滤镜") { FieldComboBox(text: $preset.customAudioFilter, info: ParameterOptionCatalog.customAudioFilter) }
             FormRow(label: "filter_complex") { FieldComboBox(text: $preset.customFilterComplex, info: ParameterOptionCatalog.customFilterComplex) }
             FormRow(label: "视频参数") { FieldComboBox(text: $preset.customVideoArguments, info: ParameterOptionCatalog.customVideoArguments) }
-            FormRow(label: "音频参数") { FieldComboBox(text: $preset.customAudioArguments, info: ParameterOptionCatalog.customAudioArguments) }
+            FormRow(label: "音频自定义参数") { FieldComboBox(text: $preset.customAudioArguments, info: ParameterOptionCatalog.customAudioArguments) }
             FormRow(label: "开头参数") { FieldComboBox(text: $preset.customLeadingArguments, info: ParameterOptionCatalog.customLeadingArguments) }
             FormRow(label: "之前参数") { FieldComboBox(text: $preset.customBeforeOutputArguments, info: ParameterOptionCatalog.customBeforeOutputArguments) }
             FormRow(label: "之后参数") { FieldComboBox(text: $preset.customAfterOutputArguments, info: ParameterOptionCatalog.customAfterOutputArguments) }
@@ -424,20 +429,21 @@ struct StreamControlPane: View {
 struct SchemeManagementPane: View {
     @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var presetStore: PresetStore
+    @EnvironmentObject private var settingsStore: SettingsStore
     @Binding var settings: AppSettings
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text("方案管理")
+            Text(t("方案管理"))
                 .font(.title2.weight(.semibold))
-            Text("不保证跨版本通用，使用非当前版本则某些设置可能未还原，版本相差过大或早期版本会直接报错。\n选中项进行操作；双击快速读取；重复选中进入编辑模式来重命名。\n选中时进行保存是覆盖到选中，不选中时会新建，删除直接手动删文件即可，位于根目录下的 Preset 文件夹。")
+            Text(t("不保证跨版本通用，使用非当前版本则某些设置可能未还原，版本相差过大或早期版本会直接报错。\n选中项进行操作；双击快速读取；重复选中进入编辑模式来重命名。\n选中时进行保存是覆盖到选中，不选中时会新建，删除直接手动删文件即可，位于根目录下的 Preset 文件夹。"))
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
                 .textSelection(.enabled)
             HStack {
-                Button("新建方案") { presetStore.reset() }
-                Button("导入 .3fui / JSON") { appState.presentPresetImportPanel() }
-                Button("导出 .3fui") { appState.presentPresetExportPanel() }
+                Button(t("新建方案")) { presetStore.reset() }
+                Button(t("导入 .3fui / JSON")) { appState.presentPresetImportPanel() }
+                Button(t("导出 .3fui")) { appState.presentPresetExportPanel() }
             }
             .buttonStyle(.bordered)
             Grid(alignment: .leading, horizontalSpacing: 14, verticalSpacing: 10) {
@@ -451,6 +457,10 @@ struct SchemeManagementPane: View {
             Text(presetStore.lastMessage)
                 .foregroundStyle(.secondary)
         }
+    }
+
+    private func t(_ key: String) -> String {
+        L10n.text(key, language: settingsStore.settings.language)
     }
 }
 

@@ -16,7 +16,7 @@ public struct ParameterPanelView: View {
                         Button {
                             selection = tab
                         } label: {
-                            Text(tab.rawValue)
+                            Text(tab.title(language: settingsStore.settings.language))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 8)
@@ -82,4 +82,3 @@ public struct ParameterPanelView: View {
         }
     }
 }
-

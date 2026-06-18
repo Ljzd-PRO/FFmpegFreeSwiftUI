@@ -18,6 +18,10 @@ enum ParameterTab: String, CaseIterable, Identifiable {
     case scheme = "方案管理"
 
     var id: String { rawValue }
+
+    func title(language: String) -> String {
+        L10n.text(rawValue, language: language)
+    }
 }
 
 @MainActor

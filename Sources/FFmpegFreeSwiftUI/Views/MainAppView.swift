@@ -16,6 +16,10 @@ public enum MainSection: String, CaseIterable, Identifiable {
     case supporters = "支持者"
 
     public var id: String { rawValue }
+
+    public func title(language: String) -> String {
+        L10n.text(rawValue, language: language)
+    }
 }
 
 public struct MainAppView: View {
@@ -32,7 +36,7 @@ public struct MainAppView: View {
                 Section("FFmpegFreeSwiftUI") {
                     ForEach(MainSection.allCases) { section in
                         NavigationLink(value: section) {
-                            Label(section.rawValue, systemImage: icon(for: section))
+                            Label(section.title(language: settingsStore.settings.language), systemImage: icon(for: section))
                         }
                     }
                 }
@@ -69,7 +73,7 @@ public struct MainAppView: View {
                     SupportersView()
                 }
             }
-            .navigationTitle(appState.selectedSection?.rawValue ?? "FFmpegFreeSwiftUI")
+            .navigationTitle(appState.selectedSection?.title(language: settingsStore.settings.language) ?? "FFmpegFreeSwiftUI")
         }
     }
 

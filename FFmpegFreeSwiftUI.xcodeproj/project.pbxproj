@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		09988C2FB26FDDE4638C762D /* PresetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91465DF5335C8B42DF85FEDA /* PresetStore.swift */; };
 		0AFFBFA1D709AF48A5F63ACC /* FFmpegProgressParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945CB9D38AAFE0EF90C4AEC0 /* FFmpegProgressParser.swift */; };
+		1000000000000000000000A1 /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1000000000000000000000A0 /* AppIcon.icns */; };
 		25ADBFAE5B2D543A75D6C64D /* EncodingQueueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B716282A65BA26F5FD16BE1E /* EncodingQueueStore.swift */; };
 		373E2FD0FE0D4467EC6FC660 /* FFprobeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0846263DA40BBFED8934BF94 /* FFprobeService.swift */; };
 		3E38A78440969CCED79787AF /* OutputPathBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B32C1A91352E8AC57462B6D /* OutputPathBuilder.swift */; };
@@ -28,6 +29,7 @@
 		919B12D14B280CEA87AB4F16 /* MainAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68FD403BEEEB48255A3EE78 /* MainAppView.swift */; };
 		9312410E5AE1FF4447723F14 /* MacSystemServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861CA531057D3C37681F700D /* MacSystemServices.swift */; };
 		938862640744A2A30BA50339 /* FileSizeFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1173A60FC4FE74730EC7FABA /* FileSizeFormatting.swift */; };
+		9A0000000000000000000001 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0000000000000000000000 /* Localization.swift */; };
 		A0467DC0EF1172740B0861F1 /* PrepareFilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC4428A1AF57F7F697422435 /* PrepareFilesView.swift */; };
 		A293BBF78CA3E301684FFAEA /* MuxingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4288C35ABAAE04CE51C0360 /* MuxingView.swift */; };
 		A34A2DC5B92E167C686F88B8 /* FFmpegRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CC605409D579B99B3B5A4F /* FFmpegRunner.swift */; };
@@ -35,9 +37,7 @@
 		A51000000000000000000002 /* ParameterPanelControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50000000000000000000002 /* ParameterPanelControls.swift */; };
 		A51000000000000000000003 /* ParameterOptionCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50000000000000000000003 /* ParameterOptionCatalog.swift */; };
 		A51000000000000000000004 /* ParameterPanelPanes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50000000000000000000004 /* ParameterPanelPanes.swift */; };
-		A61000000000000000000002 /* TestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000005 /* TestSupport.swift */; };
-		A61000000000000000000003 /* CommandOnlyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000006 /* CommandOnlyTests.swift */; };
-		A61000000000000000000004 /* RuntimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000007 /* RuntimeTests.swift */; };
+		AE607FCE9F15837FE607C01A /* PerformanceMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E152535A46DAA1A7EA8FEA2F /* PerformanceMonitor.swift */; };
 		B61000000000000000000001 /* CommandOnlyXCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000001 /* CommandOnlyXCTests.swift */; };
 		B61000000000000000000002 /* XCTestCaseRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000002 /* XCTestCaseRunner.swift */; };
 		B61000000000000000000003 /* TestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000005 /* TestSupport.swift */; };
@@ -48,13 +48,7 @@
 		B61000000000000000000008 /* TestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000005 /* TestSupport.swift */; };
 		B61000000000000000000009 /* CommandOnlyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000006 /* CommandOnlyTests.swift */; };
 		B6100000000000000000000A /* RuntimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000007 /* RuntimeTests.swift */; };
-		AE607FCE9F15837FE607C01A /* PerformanceMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E152535A46DAA1A7EA8FEA2F /* PerformanceMonitor.swift */; };
 		B7F7642A7783EF0C295795A7 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D67A0C97724FBBA4D0753C3 /* AppSettings.swift */; };
-		CF505AD32FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF505AD12FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp.swift */; };
-		D324F3D8E10B5689443F028D /* FFplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92574834D7D4D738B816EE /* FFplayView.swift */; };
-		DF83C9BE26E5B679216F46D3 /* EncodingTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B6E6C7B6EF8DBE00475AB5 /* EncodingTask.swift */; };
-		F2345A65360D151D95611EA6 /* EncodeQueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46D7C293DB9AAE2994F3859C /* EncodeQueueView.swift */; };
-		F9F2CCBE0BD881B6D243E018 /* PresetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAEE752393C4B6B0FAEFB319 /* PresetData.swift */; };
 		C10000000000000000000001 /* QualityAssessment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000001 /* QualityAssessment.swift */; };
 		C10000000000000000000002 /* MuxingCommandBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000002 /* MuxingCommandBuilder.swift */; };
 		C10000000000000000000003 /* MergingCommandBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000003 /* MergingCommandBuilder.swift */; };
@@ -64,16 +58,14 @@
 		C10000000000000000000007 /* QualityAssessmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000007 /* QualityAssessmentView.swift */; };
 		C10000000000000000000008 /* PluginExtensionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000008 /* PluginExtensionView.swift */; };
 		C10000000000000000000009 /* ToolPageUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000009 /* ToolPageUtilities.swift */; };
+		CF505AD32FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF505AD12FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp.swift */; };
+		D324F3D8E10B5689443F028D /* FFplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92574834D7D4D738B816EE /* FFplayView.swift */; };
+		DF83C9BE26E5B679216F46D3 /* EncodingTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B6E6C7B6EF8DBE00475AB5 /* EncodingTask.swift */; };
+		F2345A65360D151D95611EA6 /* EncodeQueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46D7C293DB9AAE2994F3859C /* EncodeQueueView.swift */; };
+		F9F2CCBE0BD881B6D243E018 /* PresetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAEE752393C4B6B0FAEFB319 /* PresetData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		A66000000000000000000001 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 46F86FAA6BBF9AC94A7E4595 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 42AEFBAE01D2DFD981F7DA7D;
-			remoteInfo = FFmpegFreeSwiftUI;
-		};
 		B66000000000000000000001 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 46F86FAA6BBF9AC94A7E4595 /* Project object */;
@@ -93,6 +85,8 @@
 /* Begin PBXFileReference section */
 		0846263DA40BBFED8934BF94 /* FFprobeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFprobeService.swift; sourceTree = "<group>"; };
 		0DD21DAB1787A4261E487467 /* FFmpegLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFmpegLocator.swift; sourceTree = "<group>"; };
+		1000000000000000000000A0 /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
+		1000000000000000000000A3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1173A60FC4FE74730EC7FABA /* FileSizeFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSizeFormatting.swift; sourceTree = "<group>"; };
 		14837993E6A68900A4E1D578 /* SupportersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportersView.swift; sourceTree = "<group>"; };
 		1CB2574719BEDBF40FECFB23 /* MediaInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaInfoView.swift; sourceTree = "<group>"; };
@@ -110,9 +104,11 @@
 		91465DF5335C8B42DF85FEDA /* PresetStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetStore.swift; sourceTree = "<group>"; };
 		945CB9D38AAFE0EF90C4AEC0 /* FFmpegProgressParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFmpegProgressParser.swift; sourceTree = "<group>"; };
 		99006388588CE7D539A04F10 /* FFmpegFreeSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FFmpegFreeSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A0000000000000000000000 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
 		9D67A0C97724FBBA4D0753C3 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		A2CC605409D579B99B3B5A4F /* FFmpegRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFmpegRunner.swift; sourceTree = "<group>"; };
 		A4288C35ABAAE04CE51C0360 /* MuxingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuxingView.swift; sourceTree = "<group>"; };
+		A4B6E6C7B6EF8DBE00475AB5 /* EncodingTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncodingTask.swift; sourceTree = "<group>"; };
 		A50000000000000000000001 /* ParameterPanelTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterPanelTypes.swift; sourceTree = "<group>"; };
 		A50000000000000000000002 /* ParameterPanelControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterPanelControls.swift; sourceTree = "<group>"; };
 		A50000000000000000000003 /* ParameterOptionCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterOptionCatalog.swift; sourceTree = "<group>"; };
@@ -120,21 +116,15 @@
 		A60000000000000000000005 /* TestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSupport.swift; sourceTree = "<group>"; };
 		A60000000000000000000006 /* CommandOnlyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandOnlyTests.swift; sourceTree = "<group>"; };
 		A60000000000000000000007 /* RuntimeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeTests.swift; sourceTree = "<group>"; };
+		A992C6E3067AC1FE5A8BB627 /* RemoteCommandServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommandServer.swift; sourceTree = "<group>"; };
+		AC4428A1AF57F7F697422435 /* PrepareFilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrepareFilesView.swift; sourceTree = "<group>"; };
+		B14165D862236CA1F6049109 /* FFmpegCommandBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFmpegCommandBuilder.swift; sourceTree = "<group>"; };
 		B60000000000000000000001 /* CommandOnlyXCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandOnlyXCTests.swift; sourceTree = "<group>"; };
 		B60000000000000000000002 /* XCTestCaseRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestCaseRunner.swift; sourceTree = "<group>"; };
 		B60000000000000000000003 /* FFmpegFreeSwiftUICommandOnlyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FFmpegFreeSwiftUICommandOnlyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B60000000000000000000004 /* FFmpegRuntimeXCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFmpegRuntimeXCTests.swift; sourceTree = "<group>"; };
 		B60000000000000000000005 /* FFmpegFreeSwiftUIFFmpegTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FFmpegFreeSwiftUIFFmpegTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A4B6E6C7B6EF8DBE00475AB5 /* EncodingTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncodingTask.swift; sourceTree = "<group>"; };
-		A992C6E3067AC1FE5A8BB627 /* RemoteCommandServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommandServer.swift; sourceTree = "<group>"; };
-		AC4428A1AF57F7F697422435 /* PrepareFilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrepareFilesView.swift; sourceTree = "<group>"; };
-		B14165D862236CA1F6049109 /* FFmpegCommandBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFmpegCommandBuilder.swift; sourceTree = "<group>"; };
 		B716282A65BA26F5FD16BE1E /* EncodingQueueStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncodingQueueStore.swift; sourceTree = "<group>"; };
-		CAEE752393C4B6B0FAEFB319 /* PresetData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetData.swift; sourceTree = "<group>"; };
-		CF505AD12FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFmpegFreeSwiftUIApp.swift; sourceTree = "<group>"; };
-		E152535A46DAA1A7EA8FEA2F /* PerformanceMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceMonitor.swift; sourceTree = "<group>"; };
-		E68FD403BEEEB48255A3EE78 /* MainAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAppView.swift; sourceTree = "<group>"; };
-		EC52E7F08F6B79F25D026FA1 /* PresetIOService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetIOService.swift; sourceTree = "<group>"; };
 		C00000000000000000000001 /* QualityAssessment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QualityAssessment.swift; sourceTree = "<group>"; };
 		C00000000000000000000002 /* MuxingCommandBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuxingCommandBuilder.swift; sourceTree = "<group>"; };
 		C00000000000000000000003 /* MergingCommandBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MergingCommandBuilder.swift; sourceTree = "<group>"; };
@@ -144,17 +134,15 @@
 		C00000000000000000000007 /* QualityAssessmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QualityAssessmentView.swift; sourceTree = "<group>"; };
 		C00000000000000000000008 /* PluginExtensionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginExtensionView.swift; sourceTree = "<group>"; };
 		C00000000000000000000009 /* ToolPageUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolPageUtilities.swift; sourceTree = "<group>"; };
+		CAEE752393C4B6B0FAEFB319 /* PresetData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetData.swift; sourceTree = "<group>"; };
+		CF505AD12FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFmpegFreeSwiftUIApp.swift; sourceTree = "<group>"; };
+		E152535A46DAA1A7EA8FEA2F /* PerformanceMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceMonitor.swift; sourceTree = "<group>"; };
+		E68FD403BEEEB48255A3EE78 /* MainAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAppView.swift; sourceTree = "<group>"; };
+		EC52E7F08F6B79F25D026FA1 /* PresetIOService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetIOService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		29B2D46AA747A59804D46E1F /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A63000000000000000000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -178,6 +166,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1000000000000000000000A2 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1000000000000000000000A0 /* AppIcon.icns */,
+				1000000000000000000000A3 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		5928955287B8089ED2177128 = {
 			isa = PBXGroup;
 			children = (
@@ -256,6 +253,7 @@
 			isa = PBXGroup;
 			children = (
 				1173A60FC4FE74730EC7FABA /* FileSizeFormatting.swift */,
+				9A0000000000000000000000 /* Localization.swift */,
 				543DC76E53AE81A5AD582415 /* ShellQuoting.swift */,
 			);
 			path = Utilities;
@@ -285,34 +283,6 @@
 			path = FFmpegFreeSwiftUI;
 			sourceTree = "<group>";
 		};
-		BF7A2D27A78D590BDEF15AF2 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				99006388588CE7D539A04F10 /* FFmpegFreeSwiftUI.app */,
-				B60000000000000000000003 /* FFmpegFreeSwiftUICommandOnlyTests.xctest */,
-				B60000000000000000000005 /* FFmpegFreeSwiftUIFFmpegTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		CF505AD22FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp */ = {
-			isa = PBXGroup;
-			children = (
-				CF505AD12FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp.swift */,
-			);
-			path = FFmpegFreeSwiftUIApp;
-			sourceTree = "<group>";
-		};
-		D685C104AFFBCF83C7CB0FB6 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				A50000000000000000000006 /* FFmpegFreeSwiftUI */,
-				CF505AD22FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp */,
-				A60000000000000000000008 /* FFmpegFreeSwiftUITestSupport */,
-			);
-			path = Sources;
-			sourceTree = "<group>";
-		};
 		A60000000000000000000003 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -323,12 +293,14 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
-		B60000000000000000000008 /* FFmpegFreeSwiftUIXCTestSupport */ = {
+		A60000000000000000000008 /* FFmpegFreeSwiftUITestSupport */ = {
 			isa = PBXGroup;
 			children = (
-				B60000000000000000000002 /* XCTestCaseRunner.swift */,
+				A60000000000000000000006 /* CommandOnlyTests.swift */,
+				A60000000000000000000007 /* RuntimeTests.swift */,
+				A60000000000000000000005 /* TestSupport.swift */,
 			);
-			path = FFmpegFreeSwiftUIXCTestSupport;
+			path = FFmpegFreeSwiftUITestSupport;
 			sourceTree = "<group>";
 		};
 		B60000000000000000000006 /* FFmpegFreeSwiftUICommandOnlyTests */ = {
@@ -347,14 +319,41 @@
 			path = FFmpegFreeSwiftUIFFmpegTests;
 			sourceTree = "<group>";
 		};
-		A60000000000000000000008 /* FFmpegFreeSwiftUITestSupport */ = {
+		B60000000000000000000008 /* FFmpegFreeSwiftUIXCTestSupport */ = {
 			isa = PBXGroup;
 			children = (
-				A60000000000000000000006 /* CommandOnlyTests.swift */,
-				A60000000000000000000007 /* RuntimeTests.swift */,
-				A60000000000000000000005 /* TestSupport.swift */,
+				B60000000000000000000002 /* XCTestCaseRunner.swift */,
 			);
-			path = FFmpegFreeSwiftUITestSupport;
+			path = FFmpegFreeSwiftUIXCTestSupport;
+			sourceTree = "<group>";
+		};
+		BF7A2D27A78D590BDEF15AF2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				99006388588CE7D539A04F10 /* FFmpegFreeSwiftUI.app */,
+				B60000000000000000000003 /* FFmpegFreeSwiftUICommandOnlyTests.xctest */,
+				B60000000000000000000005 /* FFmpegFreeSwiftUIFFmpegTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CF505AD22FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp */ = {
+			isa = PBXGroup;
+			children = (
+				CF505AD12FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp.swift */,
+				1000000000000000000000A2 /* Resources */,
+			);
+			path = FFmpegFreeSwiftUIApp;
+			sourceTree = "<group>";
+		};
+		D685C104AFFBCF83C7CB0FB6 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				A50000000000000000000006 /* FFmpegFreeSwiftUI */,
+				CF505AD22FE0EF1A00756E8C /* FFmpegFreeSwiftUIApp */,
+				A60000000000000000000008 /* FFmpegFreeSwiftUITestSupport */,
+			);
+			path = Sources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -421,7 +420,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1600;
-				LastUpgradeCheck = 1600;
+				LastUpgradeCheck = 2650;
 				TargetAttributes = {
 					42AEFBAE01D2DFD981F7DA7D = {
 						CreatedOnToolsVersion = 16.0;
@@ -438,11 +437,13 @@
 			};
 			buildConfigurationList = 3A95AC35104CF9E1A07B0B74 /* Build configuration list for PBXProject "FFmpegFreeSwiftUI" */;
 			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = en;
+			developmentRegion = "zh-Hans";
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
+				"zh-Hant",
 			);
 			mainGroup = 5928955287B8089ED2177128;
 			productRefGroup = BF7A2D27A78D590BDEF15AF2 /* Products */;
@@ -461,13 +462,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A65000000000000000000001 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				1000000000000000000000A1 /* AppIcon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -488,6 +483,30 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		B62000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B61000000000000000000001 /* CommandOnlyXCTests.swift in Sources */,
+				B61000000000000000000002 /* XCTestCaseRunner.swift in Sources */,
+				B61000000000000000000003 /* TestSupport.swift in Sources */,
+				B61000000000000000000004 /* CommandOnlyTests.swift in Sources */,
+				B61000000000000000000005 /* RuntimeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B62000000000000000000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B61000000000000000000006 /* FFmpegRuntimeXCTests.swift in Sources */,
+				B61000000000000000000007 /* XCTestCaseRunner.swift in Sources */,
+				B61000000000000000000008 /* TestSupport.swift in Sources */,
+				B61000000000000000000009 /* CommandOnlyTests.swift in Sources */,
+				B6100000000000000000000A /* RuntimeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E7209FB05162B7572F88D05E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -515,6 +534,7 @@
 				7FC1021666304D9AF6A35D7E /* RemoteCommandServer.swift in Sources */,
 				42FB6292FB7B15B1F0DC024B /* SettingsStore.swift in Sources */,
 				938862640744A2A30BA50339 /* FileSizeFormatting.swift in Sources */,
+				9A0000000000000000000001 /* Localization.swift in Sources */,
 				3EF92273EE685A747D5C9374 /* ShellQuoting.swift in Sources */,
 				F2345A65360D151D95611EA6 /* EncodeQueueView.swift in Sources */,
 				D324F3D8E10B5689443F028D /* FFplayView.swift in Sources */,
@@ -539,38 +559,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B62000000000000000000001 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B61000000000000000000001 /* CommandOnlyXCTests.swift in Sources */,
-				B61000000000000000000002 /* XCTestCaseRunner.swift in Sources */,
-				B61000000000000000000003 /* TestSupport.swift in Sources */,
-				B61000000000000000000004 /* CommandOnlyTests.swift in Sources */,
-				B61000000000000000000005 /* RuntimeTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B62000000000000000000002 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B61000000000000000000006 /* FFmpegRuntimeXCTests.swift in Sources */,
-				B61000000000000000000007 /* XCTestCaseRunner.swift in Sources */,
-				B61000000000000000000008 /* TestSupport.swift in Sources */,
-				B61000000000000000000009 /* CommandOnlyTests.swift in Sources */,
-				B6100000000000000000000A /* RuntimeTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		A67000000000000000000001 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 42AEFBAE01D2DFD981F7DA7D /* FFmpegFreeSwiftUI */;
-			targetProxy = A66000000000000000000001 /* PBXContainerItemProxy */;
-		};
 		B67000000000000000000001 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 42AEFBAE01D2DFD981F7DA7D /* FFmpegFreeSwiftUI */;
@@ -592,18 +583,17 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = FFmpegFreeSwiftUI;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
-				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Sources/FFmpegFreeSwiftUIApp/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = top.ffmpegfreeui.FFmpegFreeSwiftUI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -616,6 +606,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -645,9 +636,11 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -667,6 +660,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG XCODE_APP";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -677,6 +671,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -706,9 +701,11 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -723,8 +720,9 @@
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = XCODE_APP;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
@@ -739,18 +737,17 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = FFmpegFreeSwiftUI;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
-				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Sources/FFmpegFreeSwiftUIApp/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = top.ffmpegfreeui.FFmpegFreeSwiftUI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -766,6 +763,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = FFmpegFreeSwiftUICommandOnlyTests;
@@ -795,6 +793,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = FFmpegFreeSwiftUICommandOnlyTests;
@@ -824,6 +823,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = FFmpegFreeSwiftUIFFmpegTests;
@@ -853,6 +853,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = FFmpegFreeSwiftUIFFmpegTests;
@@ -886,15 +887,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DDC96F7C1D62EA89141E06E0 /* Build configuration list for PBXNativeTarget "FFmpegFreeSwiftUI" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				339F2120A275E8028CC42767 /* Debug */,
-				17234DA728CB8FFFA593E13A /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		B69000000000000000000001 /* Build configuration list for PBXNativeTarget "FFmpegFreeSwiftUICommandOnlyTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -909,6 +901,15 @@
 			buildConfigurations = (
 				B68000000000000000000003 /* Debug */,
 				B68000000000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DDC96F7C1D62EA89141E06E0 /* Build configuration list for PBXNativeTarget "FFmpegFreeSwiftUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				339F2120A275E8028CC42767 /* Debug */,
+				17234DA728CB8FFFA593E13A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -25,7 +25,7 @@ public struct AppSettings: Codable, Equatable, Sendable {
 
     public init() {
         fontName = "System"
-        language = "zh"
+        language = AppLanguage.simplifiedChinese.rawValue
         selectedProcessorCores = ""
         maxConcurrentTasks = 1
         queueRefreshInterval = 1
@@ -51,7 +51,7 @@ public struct AppSettings: Codable, Equatable, Sendable {
         self.init()
         let container = try decoder.container(keyedBy: CodingKeys.self)
         fontName = container.decodeDefault(String.self, forKey: .fontName, default: fontName)
-        language = container.decodeDefault(String.self, forKey: .language, default: language)
+        language = AppLanguage.normalize(container.decodeDefault(String.self, forKey: .language, default: language)).rawValue
         selectedProcessorCores = container.decodeDefault(String.self, forKey: .selectedProcessorCores, default: selectedProcessorCores)
         maxConcurrentTasks = container.decodeDefault(Int.self, forKey: .maxConcurrentTasks, default: maxConcurrentTasks)
         queueRefreshInterval = container.decodeDefault(TimeInterval.self, forKey: .queueRefreshInterval, default: queueRefreshInterval)

@@ -52,6 +52,37 @@ public func makeCommandOnlyTests() -> [TestCase] {
             try expectEqual(settings.presetAutoLoadPath, "", "preset auto load path default")
             try expectEqual(settings.lastPreset.outputContainer, "mp4", "settings last preset")
         },
+        TestCase("Settings coding", "Normalizes legacy language values") { _ in
+            let zh = try JSONDecoder().decode(AppSettings.self, from: Data(#"{"language":"zh"}"#.utf8))
+            let tw = try JSONDecoder().decode(AppSettings.self, from: Data(#"{"language":"zh-TW"}"#.utf8))
+            let en = try JSONDecoder().decode(AppSettings.self, from: Data(#"{"language":"en-US"}"#.utf8))
+            try expectEqual(zh.language, AppLanguage.simplifiedChinese.rawValue, "legacy zh should become zh-Hans")
+            try expectEqual(tw.language, AppLanguage.traditionalChinese.rawValue, "zh-TW should become zh-Hant")
+            try expectEqual(en.language, AppLanguage.english.rawValue, "en-US should become en")
+        },
+        TestCase("Localization", "Translates common UI text") { _ in
+            try expectEqual(L10n.text("设置", language: "en"), "Settings", "English settings")
+            try expectEqual(L10n.text("导航", language: "en"), "Navigation", "English navigation")
+            try expectEqual(L10n.text("设置", language: "zh-Hant"), "設置", "Traditional Chinese settings")
+            try expectEqual(L10n.text("编码队列", language: "zh-Hant"), "編碼隊列", "Traditional Chinese navigation")
+            try expectEqual(L10n.text("设置", language: "zh-Hans"), "设置", "Simplified Chinese should keep source text")
+        },
+        TestCase("FFmpeg locator", "Derives sibling ffprobe and ffplay overrides") { context in
+            let directory = context.tempRoot.appendingPathComponent("tools", isDirectory: true)
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            for executable in ["ffmpeg", "ffprobe", "ffplay"] {
+                let url = directory.appendingPathComponent(executable)
+                try "#!/bin/sh\nexit 0\n".write(to: url, atomically: true, encoding: .utf8)
+                try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: url.path)
+            }
+
+            var settings = AppSettings()
+            settings.ffmpegExecutableOverride = directory.appendingPathComponent("ffmpeg").path
+            let locator = FFmpegLocator(settings: settings)
+            try expectEqual(locator.location(for: .ffmpeg).source, .userOverride, "ffmpeg source")
+            try expectEqual(locator.locate(.ffprobe), directory.appendingPathComponent("ffprobe").path, "derived ffprobe")
+            try expectEqual(locator.locate(.ffplay), directory.appendingPathComponent("ffplay").path, "derived ffplay")
+        },
         TestCase("Basic command", "Builds video and audio command") { _ in
             var preset = PresetData()
             preset.outputContainer = "mp4"
