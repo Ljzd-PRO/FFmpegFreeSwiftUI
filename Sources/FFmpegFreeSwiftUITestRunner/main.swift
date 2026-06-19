@@ -10,8 +10,8 @@ do {
     exit(1)
 }
 
-let commandTests = makeCommandOnlyTests()
-let runtimeTests = makeRuntimeTests()
+let commandTests = makeCommandOnlyTests() + makeFeatureCommandOnlyTests()
+let runtimeTests = makeRuntimeTests() + makeFeatureRuntimeTests()
 
 let selectedTests: [TestCase]
 switch configuration.mode {
@@ -58,7 +58,7 @@ for test in selectedTests {
         if test.requiresFFmpeg, ffmpegPath == nil {
             throw TestSkip("ffmpeg not found")
         }
-        try test.body(context)
+        try await test.body(context)
         passed += 1
         print("PASS \(label)")
     } catch let skip as TestSkip {

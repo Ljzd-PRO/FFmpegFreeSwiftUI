@@ -48,6 +48,12 @@
 		B61000000000000000000008 /* TestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000005 /* TestSupport.swift */; };
 		B61000000000000000000009 /* CommandOnlyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000006 /* CommandOnlyTests.swift */; };
 		B6100000000000000000000A /* RuntimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000007 /* RuntimeTests.swift */; };
+		B6100000000000000000000B /* FeatureCommandOnlyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000009 /* FeatureCommandOnlyTests.swift */; };
+		B6100000000000000000000C /* FeatureRuntimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6000000000000000000000A /* FeatureRuntimeTests.swift */; };
+		B6100000000000000000000D /* FeatureCommandOnlyXCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000009 /* FeatureCommandOnlyXCTests.swift */; };
+		B6100000000000000000000E /* FeatureCommandOnlyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000000000000000000009 /* FeatureCommandOnlyTests.swift */; };
+		B6100000000000000000000F /* FeatureRuntimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6000000000000000000000A /* FeatureRuntimeTests.swift */; };
+		B61000000000000000000010 /* FeatureRuntimeXCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6000000000000000000000A /* FeatureRuntimeXCTests.swift */; };
 		B7F7642A7783EF0C295795A7 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D67A0C97724FBBA4D0753C3 /* AppSettings.swift */; };
 		C10000000000000000000001 /* QualityAssessment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000001 /* QualityAssessment.swift */; };
 		C10000000000000000000002 /* MuxingCommandBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000002 /* MuxingCommandBuilder.swift */; };
@@ -116,6 +122,8 @@
 		A60000000000000000000005 /* TestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSupport.swift; sourceTree = "<group>"; };
 		A60000000000000000000006 /* CommandOnlyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandOnlyTests.swift; sourceTree = "<group>"; };
 		A60000000000000000000007 /* RuntimeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeTests.swift; sourceTree = "<group>"; };
+		A60000000000000000000009 /* FeatureCommandOnlyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureCommandOnlyTests.swift; sourceTree = "<group>"; };
+		A6000000000000000000000A /* FeatureRuntimeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureRuntimeTests.swift; sourceTree = "<group>"; };
 		A992C6E3067AC1FE5A8BB627 /* RemoteCommandServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommandServer.swift; sourceTree = "<group>"; };
 		AC4428A1AF57F7F697422435 /* PrepareFilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrepareFilesView.swift; sourceTree = "<group>"; };
 		B14165D862236CA1F6049109 /* FFmpegCommandBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFmpegCommandBuilder.swift; sourceTree = "<group>"; };
@@ -124,6 +132,8 @@
 		B60000000000000000000003 /* FFmpegFreeSwiftUICommandOnlyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FFmpegFreeSwiftUICommandOnlyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B60000000000000000000004 /* FFmpegRuntimeXCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFmpegRuntimeXCTests.swift; sourceTree = "<group>"; };
 		B60000000000000000000005 /* FFmpegFreeSwiftUIFFmpegTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FFmpegFreeSwiftUIFFmpegTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B60000000000000000000009 /* FeatureCommandOnlyXCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureCommandOnlyXCTests.swift; sourceTree = "<group>"; };
+		B6000000000000000000000A /* FeatureRuntimeXCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureRuntimeXCTests.swift; sourceTree = "<group>"; };
 		B716282A65BA26F5FD16BE1E /* EncodingQueueStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncodingQueueStore.swift; sourceTree = "<group>"; };
 		C00000000000000000000001 /* QualityAssessment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QualityAssessment.swift; sourceTree = "<group>"; };
 		C00000000000000000000002 /* MuxingCommandBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuxingCommandBuilder.swift; sourceTree = "<group>"; };
@@ -297,6 +307,8 @@
 			isa = PBXGroup;
 			children = (
 				A60000000000000000000006 /* CommandOnlyTests.swift */,
+				A60000000000000000000009 /* FeatureCommandOnlyTests.swift */,
+				A6000000000000000000000A /* FeatureRuntimeTests.swift */,
 				A60000000000000000000007 /* RuntimeTests.swift */,
 				A60000000000000000000005 /* TestSupport.swift */,
 			);
@@ -307,6 +319,7 @@
 			isa = PBXGroup;
 			children = (
 				B60000000000000000000001 /* CommandOnlyXCTests.swift */,
+				B60000000000000000000009 /* FeatureCommandOnlyXCTests.swift */,
 			);
 			path = FFmpegFreeSwiftUICommandOnlyTests;
 			sourceTree = "<group>";
@@ -315,6 +328,7 @@
 			isa = PBXGroup;
 			children = (
 				B60000000000000000000004 /* FFmpegRuntimeXCTests.swift */,
+				B6000000000000000000000A /* FeatureRuntimeXCTests.swift */,
 			);
 			path = FFmpegFreeSwiftUIFFmpegTests;
 			sourceTree = "<group>";
@@ -492,6 +506,9 @@
 				B61000000000000000000003 /* TestSupport.swift in Sources */,
 				B61000000000000000000004 /* CommandOnlyTests.swift in Sources */,
 				B61000000000000000000005 /* RuntimeTests.swift in Sources */,
+				B6100000000000000000000B /* FeatureCommandOnlyTests.swift in Sources */,
+				B6100000000000000000000C /* FeatureRuntimeTests.swift in Sources */,
+				B6100000000000000000000D /* FeatureCommandOnlyXCTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -504,6 +521,9 @@
 				B61000000000000000000008 /* TestSupport.swift in Sources */,
 				B61000000000000000000009 /* CommandOnlyTests.swift in Sources */,
 				B6100000000000000000000A /* RuntimeTests.swift in Sources */,
+				B6100000000000000000000E /* FeatureCommandOnlyTests.swift in Sources */,
+				B6100000000000000000000F /* FeatureRuntimeTests.swift in Sources */,
+				B61000000000000000000010 /* FeatureRuntimeXCTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

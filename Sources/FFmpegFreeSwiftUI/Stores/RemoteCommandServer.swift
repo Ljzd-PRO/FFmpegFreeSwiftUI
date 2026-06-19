@@ -93,7 +93,7 @@ public final class RemoteCommandServer: ObservableObject {
     public func parse(args: [String]) {
         guard let queueStore else { return }
         if let ffmpegIndex = args.firstIndex(of: "-ffmpeg") {
-            let ffmpegArgs = args.dropFirst(ffmpegIndex + 1).joined(separator: " ")
+            let ffmpegArgs = ShellQuoting.joinArguments(Array(args.dropFirst(ffmpegIndex + 1)))
             queueStore.addCommandTask(arguments: ffmpegArgs, displayName: "远程命令行任务")
             return
         }
@@ -123,7 +123,11 @@ public final class RemoteCommandServer: ObservableObject {
         }
     }
 
-    private func normalizedPort(_ port: String) -> String {
+    public static func normalizedPort(_ port: String) -> String {
         port == "10590" || port.isEmpty ? "10591" : port
+    }
+
+    private func normalizedPort(_ port: String) -> String {
+        Self.normalizedPort(port)
     }
 }

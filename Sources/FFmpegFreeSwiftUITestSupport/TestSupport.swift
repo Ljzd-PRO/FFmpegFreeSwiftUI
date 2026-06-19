@@ -133,9 +133,18 @@ public struct TestCase {
     public var name: String
     public var group: String
     public var requiresFFmpeg: Bool
-    public var body: (TestContext) throws -> Void
+    public var body: (TestContext) async throws -> Void
 
     public init(_ group: String, _ name: String, requiresFFmpeg: Bool = false, body: @escaping (TestContext) throws -> Void) {
+        self.group = group
+        self.name = name
+        self.requiresFFmpeg = requiresFFmpeg
+        self.body = { context in
+            try body(context)
+        }
+    }
+
+    public init(_ group: String, _ name: String, requiresFFmpeg: Bool = false, body: @escaping (TestContext) async throws -> Void) {
         self.group = group
         self.name = name
         self.requiresFFmpeg = requiresFFmpeg
@@ -177,6 +186,27 @@ public func expectContains(_ text: String, _ fragment: String, _ message: String
 
 public func expectNotContains(_ text: String, _ fragment: String, _ message: String) throws {
     try expect(!text.contains(fragment), "\(message). Unexpected fragment: \(fragment)\nCommand: \(text)")
+}
+
+public func runOnMainActor<T>(_ body: @MainActor () throws -> T) async throws -> T {
+    try await MainActor.run {
+        try body()
+    }
+}
+
+public func waitUntil(
+    timeout: TimeInterval = 5,
+    interval: TimeInterval = 0.05,
+    _ condition: @escaping @Sendable () async throws -> Bool
+) async throws {
+    let deadline = Date().addingTimeInterval(timeout)
+    while Date() < deadline {
+        if try await condition() {
+            return
+        }
+        try await Task.sleep(nanoseconds: UInt64(interval * 1_000_000_000))
+    }
+    throw TestFailure("Timed out waiting for condition")
 }
 
 public func command(for preset: PresetData, input: String = "/tmp/input file.mkv", output: String = "/tmp/output file.mp4") -> String {

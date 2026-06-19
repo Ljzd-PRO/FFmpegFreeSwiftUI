@@ -13,7 +13,7 @@ final class XCTestCaseRunner {
         }
     }
 
-    func run(_ index: Int, in testCase: XCTestCase) throws {
+    func run(_ index: Int, in testCase: XCTestCase) async throws {
         let sharedTest = tests[index]
         guard isTestSelected(sharedTest, mode: configuration.mode) else {
             throw XCTSkip("disabled by \(TestConfiguration.modeEnvironmentKey)=\(configuration.mode.rawValue)")
@@ -41,7 +41,7 @@ final class XCTestCaseRunner {
 
         let context = TestContext(configuration: testConfiguration, ffmpegPath: ffmpegPath, tempRoot: tempRoot)
         do {
-            try sharedTest.body(context)
+            try await sharedTest.body(context)
         } catch let skip as TestSkip {
             throw XCTSkip(skip.description)
         } catch {

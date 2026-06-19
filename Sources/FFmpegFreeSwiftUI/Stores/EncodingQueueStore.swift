@@ -10,12 +10,19 @@ public final class EncodingQueueStore: ObservableObject {
     private let builder = FFmpegCommandBuilder()
     private let parser = FFmpegProgressParser()
     private let sleepPreventer = SleepPreventer()
-    private var runningProcesses: [UUID: FFmpegRunningProcess] = [:]
+    private let runnerFactory: (FFmpegLocator, AppSettings) -> any FFmpegProcessLaunching
+    private var runningProcesses: [UUID: any FFmpegProcessHandle] = [:]
     private var lastOutputUpdate: [UUID: Date] = [:]
     private var handledTerminations: Set<UUID> = []
 
-    public init(settingsStore: SettingsStore) {
+    public init(
+        settingsStore: SettingsStore,
+        runnerFactory: @escaping (FFmpegLocator, AppSettings) -> any FFmpegProcessLaunching = { locator, settings in
+            FFmpegRunner(locator: locator, settings: settings)
+        }
+    ) {
         self.settingsStore = settingsStore
+        self.runnerFactory = runnerFactory
     }
 
     public var selectedTask: EncodingTask? {
@@ -100,7 +107,7 @@ public final class EncodingQueueStore: ObservableObject {
             return
         }
         let locator = FFmpegLocator(settings: settingsStore.settings)
-        let runner = FFmpegRunner(locator: locator, settings: settingsStore.settings)
+        let runner = runnerFactory(locator, settingsStore.settings)
         task.status = .running
         task.startedAt = Date()
         task.completedAt = nil

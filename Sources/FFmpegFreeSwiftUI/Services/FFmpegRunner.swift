@@ -1,6 +1,23 @@
 import Foundation
 
-public final class FFmpegRunningProcess {
+public protocol FFmpegProcessHandle: AnyObject {
+    var processIdentifier: Int32 { get }
+    func waitUntilExitStatus() async -> Int32
+    func send(_ message: String)
+    func pause()
+    func resume()
+    func stop()
+}
+
+public protocol FFmpegProcessLaunching {
+    func run(
+        argumentsLine: String,
+        outputHandler: @escaping @Sendable (String) -> Void,
+        terminationHandler: @escaping @Sendable (Int32) -> Void
+    ) throws -> any FFmpegProcessHandle
+}
+
+public final class FFmpegRunningProcess: FFmpegProcessHandle {
     public let process: Process
     public let stdinPipe: Pipe
 
@@ -48,7 +65,7 @@ public final class FFmpegRunningProcess {
     }
 }
 
-public struct FFmpegRunner {
+public struct FFmpegRunner: FFmpegProcessLaunching {
     public var locator: FFmpegLocator
     public var settings: AppSettings
 
@@ -61,7 +78,7 @@ public struct FFmpegRunner {
         argumentsLine: String,
         outputHandler: @escaping @Sendable (String) -> Void,
         terminationHandler: @escaping @Sendable (Int32) -> Void
-    ) throws -> FFmpegRunningProcess {
+    ) throws -> any FFmpegProcessHandle {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: locator.locate(.ffmpeg))
         var arguments = ShellQuoting.splitArguments(argumentsLine)

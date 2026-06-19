@@ -13,10 +13,12 @@ public final class QualityAssessmentStore: ObservableObject {
     private var workerTask: Task<Void, Never>?
     private var probeTask: Task<Void, Never>?
     private let historyURL: URL
+    private let autoStart: Bool
 
-    public init(settingsStore: SettingsStore) {
+    public init(settingsStore: SettingsStore, historyURL: URL? = nil, autoStart: Bool = true) {
         self.settingsStore = settingsStore
-        historyURL = Self.defaultHistoryURL()
+        self.historyURL = historyURL ?? Self.defaultHistoryURL()
+        self.autoStart = autoStart
         loadHistory()
     }
 
@@ -70,7 +72,9 @@ public final class QualityAssessmentStore: ObservableObject {
             }
         }
         statusMessage = "已加入测评队列"
-        startIfNeeded()
+        if autoStart {
+            startIfNeeded()
+        }
     }
 
     public func startIfNeeded() {
