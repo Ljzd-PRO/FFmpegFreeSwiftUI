@@ -217,6 +217,58 @@ public func makeCommandOnlyTests() -> [TestCase] {
             try expectNotContains(built, "-gpu 0", "videotoolbox should skip gpu")
             try expectNotContains(built, "-threads:v 8", "videotoolbox should skip video threads")
         },
+        TestCase("VideoToolbox", "Defaults quality value to q:v and skips incompatible quality arguments") { _ in
+            var preset = PresetData()
+            preset.videoEncoder = "h264_videotoolbox"
+            preset.bitrateControlMode = "vt_quality"
+            preset.qualityValue = "65"
+            let built = command(for: preset, input: "/tmp/in.mov", output: "/tmp/out.mp4")
+            try expectContains(built, "-q:v 65", "videotoolbox should default quality value to q:v")
+            try expectNotContains(built, "vt_quality", "target mode is UI-only")
+
+            let overview = FFmpegCommandBuilder().overview(preset: preset)
+            try expectContains(overview, "质量等级: -q:v 65", "overview should show q:v quality")
+
+            preset.qualityArgumentName = "-crf"
+            preset.qualityValue = "23"
+            preset.bitrateControlMode = "VideoToolbox 质量 -q:v"
+            let incompatible = command(for: preset, input: "/tmp/in.mov", output: "/tmp/out.mp4")
+            try expectNotContains(incompatible, "-crf 23", "videotoolbox should skip crf")
+            try expectNotContains(incompatible, "-q:v 23", "incompatible legacy quality value should not become q:v")
+            try expectNotContains(incompatible, "VideoToolbox 质量", "legacy target label is UI-only")
+
+            let incompatibleOverview = FFmpegCommandBuilder().overview(preset: preset)
+            try expectContains(incompatibleOverview, "已跳过 -crf", "overview should explain skipped crf")
+        },
+        TestCase("VideoToolbox", "Bitrate target and ProRes quality behavior") { _ in
+            var hevc = PresetData()
+            hevc.videoEncoder = "hevc_videotoolbox"
+            hevc.bitrateControlMode = "平均码率 -b:v"
+            hevc.bitrateBase = "5M"
+            hevc.bitrateMax = "8M"
+            hevc.bitrateBuffer = "10M"
+            let hevcCommand = command(for: hevc, input: "/tmp/in.mov", output: "/tmp/out.mp4")
+            try expectContains(hevcCommand, "-b:v 5M", "videotoolbox bitrate base")
+            try expectContains(hevcCommand, "-maxrate 8M", "videotoolbox maxrate")
+            try expectContains(hevcCommand, "-bufsize 10M", "videotoolbox bufsize")
+            try expectNotContains(hevcCommand, "平均码率", "legacy target label is UI-only")
+
+            let hevcOverview = FFmpegCommandBuilder().overview(preset: hevc)
+            try expectContains(hevcOverview, "大小控制: -b:v 5M", "overview should show bitrate target")
+
+            var prores = PresetData()
+            prores.videoEncoder = "prores_videotoolbox"
+            prores.videoProfile = "hq"
+            prores.qualityArgumentName = "-q:v"
+            prores.qualityValue = "80"
+            let proresCommand = command(for: prores, input: "/tmp/in.mov", output: "/tmp/out.mov")
+            try expectContains(proresCommand, "-profile:v hq", "prores profile should control quality")
+            try expectNotContains(proresCommand, "-q:v 80", "prores should skip q:v quality")
+
+            let proresOverview = FFmpegCommandBuilder().overview(preset: prores)
+            try expectContains(proresOverview, "ProRes 档位: hq", "overview should show prores profile")
+            try expectContains(proresOverview, "已跳过质量参数", "overview should explain skipped prores quality")
+        },
         TestCase("VideoToolbox", "Probe parser") { _ in
             let output = """
             Encoder hevc_videotoolbox [VideoToolbox H.265 Encoder]:
