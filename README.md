@@ -1,6 +1,6 @@
 # FFmpegFreeSwiftUI
 
-`FFmpegFreeSwiftUI` 是 `FFmpegFreeUI` 的 macOS 原生 SwiftUI 迁移版本。项目目标是尽量还原原版 v5 的页面顺序、参数面板和常用工作流，同时用 macOS 原生能力替代 Windows 专属实现。
+`FFmpegFreeSwiftUI` 是 [FFmpegFreeUI](https://github.com/Lake1059/FFmpegFreeUI) 的 macOS 原生 SwiftUI 迁移版本。项目目标是尽量还原原版 v5 的页面顺序、参数面板和常用工作流，同时用 macOS 原生能力替代 Windows 专属实现。
 
 当前仓库仍保留原 Windows 项目作为迁移参考；macOS App 本体位于 `Sources/FFmpegFreeSwiftUI` 与 `Sources/FFmpegFreeSwiftUIApp`。
 
@@ -268,6 +268,8 @@ FFmpegFreeSwiftUI.xcodeproj      Xcode 工程
 FFmpegFreeUI                     原 Windows 项目参考代码
 ```
 
-## 许可与来源
+## 原项目引用与致谢
 
-本项目是对仓库中 `FFmpegFreeUI` 原项目的 macOS 原生迁移尝试。原项目的设计、页面顺序、参数命名和预设兼容策略是本项目的重要参考。
+本项目是对 [Lake1059/FFmpegFreeUI](https://github.com/Lake1059/FFmpegFreeUI) 的 macOS 原生迁移尝试。原项目的设计、页面顺序、参数命名、预设兼容策略和大量功能行为是 `FFmpegFreeSwiftUI` 的重要参考。
+
+感谢 `FFmpegFreeUI` 原作者及其项目贡献者长期维护 3FUI，也感谢原项目为本迁移版提供的设计基础、功能语义和兼容性参照。若需要 Windows 原版、最新发布包或原项目文档，请访问原仓库：[https://github.com/Lake1059/FFmpegFreeUI](https://github.com/Lake1059/FFmpegFreeUI)。
