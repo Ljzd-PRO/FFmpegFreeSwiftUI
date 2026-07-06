@@ -305,7 +305,9 @@ public struct FFmpegCommandBuilder: Sendable {
         lines.append("输出容器: \(preset.outputContainer)")
         lines.append("视频编码器: \(preset.videoEncoder.isEmpty ? "默认" : preset.videoEncoder)")
         lines.append("音频编码器: \(preset.audioEncoder.isEmpty ? "默认" : preset.audioEncoder)")
-        if let qualityArgument = normalizedOptionName(preset.qualityArgumentName), !preset.qualityValue.isEmpty {
+        if VideoEncoderCapabilityCatalog.isVideoToolboxEncoder(preset.videoEncoder) {
+            appendVideoToolboxQualityOverview(preset: preset, to: &lines)
+        } else if let qualityArgument = normalizedOptionName(preset.qualityArgumentName), !preset.qualityValue.isEmpty {
             lines.append("质量: \(qualityArgument) \(preset.qualityValue)")
         }
         if !preset.videoResolution.isEmpty { lines.append("分辨率: \(preset.videoResolution)") }
@@ -407,7 +409,7 @@ public struct FFmpegCommandBuilder: Sendable {
         if isVideoToolbox, !preset.pixelFormat.isEmpty {
             args += ["-pix_fmt", preset.pixelFormat]
         }
-        if let qualityArgument = normalizedOptionName(preset.qualityArgumentName), !preset.qualityValue.isEmpty {
+        if let qualityArgument = videoQualityArgument(preset: preset), !preset.qualityValue.isEmpty {
             args += [qualityArgument, preset.qualityValue]
         }
         if !preset.bitrateBase.isEmpty { args += ["-b:v", preset.bitrateBase] }
@@ -773,8 +775,45 @@ public struct FFmpegCommandBuilder: Sendable {
         return "-" + trimmed
     }
 
+    private func videoQualityArgument(preset: PresetData) -> String? {
+        guard !preset.qualityValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return nil
+        }
+        guard let kind = VideoToolboxEncoderKind(encoder: preset.videoEncoder) else {
+            return normalizedOptionName(preset.qualityArgumentName)
+        }
+
+        switch kind {
+        case .h264, .hevc:
+            guard let argument = normalizedOptionName(preset.qualityArgumentName) else {
+                return "-q:v"
+            }
+            return argument == "-q:v" ? "-q:v" : nil
+        case .prores:
+            return nil
+        }
+    }
+
+    private func appendVideoToolboxQualityOverview(preset: PresetData, to lines: inout [String]) {
+        guard let kind = VideoToolboxEncoderKind(encoder: preset.videoEncoder) else { return }
+
+        switch kind {
+        case .h264, .hevc:
+            if !preset.bitrateBase.isEmpty {
+                lines.append("大小控制: -b:v \(preset.bitrateBase)")
+            }
+            if videoQualityArgument(preset: preset) == "-q:v" {
+                lines.append("质量等级: -q:v \(preset.qualityValue)")
+            }
+        case .prores:
+            if !preset.videoProfile.isEmpty {
+                lines.append("ProRes 档位: \(preset.videoProfile)")
+            }
+        }
+    }
+
     private func appendVideoToolboxWarnings(preset: PresetData, to lines: inout [String]) {
-        guard VideoEncoderCapabilityCatalog.isVideoToolboxEncoder(preset.videoEncoder) else { return }
+        guard let kind = VideoToolboxEncoderKind(encoder: preset.videoEncoder) else { return }
 
         var ignored: [String] = []
         if !preset.videoPreset.isEmpty { ignored.append("-preset") }
@@ -785,9 +824,20 @@ public struct FFmpegCommandBuilder: Sendable {
             lines.append("VideoToolbox 提示: \(ignored.joined(separator: "、")) 不适用，命令生成时已跳过。")
         }
 
-        if let qualityArgument = normalizedOptionName(preset.qualityArgumentName),
-           ["-crf", "-cq", "-qp", "-global_quality"].contains(qualityArgument) {
-            lines.append("VideoToolbox 提示: \(qualityArgument) 不按 x264/x265 语义生效，建议改用 -q:v 或码率参数。")
+        switch kind {
+        case .h264, .hevc:
+            if let qualityArgument = normalizedOptionName(preset.qualityArgumentName),
+               qualityArgument != "-q:v" {
+                if ["-crf", "-cq", "-qp", "-global_quality"].contains(qualityArgument) {
+                    lines.append("VideoToolbox 提示: 已跳过 \(qualityArgument)，CRF/CQ/QP 不适用 VideoToolbox。")
+                } else {
+                    lines.append("VideoToolbox 提示: 已跳过 \(qualityArgument)，VideoToolbox 质量等级仅使用 -q:v。")
+                }
+            }
+        case .prores:
+            if !preset.qualityArgumentName.isEmpty || !preset.qualityValue.isEmpty {
+                lines.append("ProRes VideoToolbox 提示: 已跳过质量参数，质量/大小请使用 profile 档位。")
+            }
         }
     }
 
