@@ -4,10 +4,13 @@
 
 当前仓库仍保留原 Windows 项目作为迁移参考；macOS App 本体位于 `Sources/FFmpegFreeSwiftUI` 与 `Sources/FFmpegFreeSwiftUIApp`。
 
+本项目的 macOS 迁移实现由 OpenAI Codex 根据用户需求协助开发。
+
 ## 项目定位
 
 - 目标平台：macOS 13.0 及以上。
 - UI 技术：SwiftUI 原生 macOS App。
+- 开发方式：由 Codex 在用户提出的迁移目标、功能要求和反馈迭代下协助实现。
 - 功能基线：对齐原版 v5，不保留 v6 的 Agent、社区浏览、集成工具等新增入口。
 - FFmpeg 策略：不内置 `ffmpeg`、`ffprobe`、`ffplay`，由用户自行安装或指定路径。
 - 预设兼容：继续使用原版中文 JSON key，保持 `.3fui` / JSON 预设兼容思路。
@@ -273,3 +276,5 @@ FFmpegFreeUI                     原 Windows 项目参考代码
 本项目是对 [Lake1059/FFmpegFreeUI](https://github.com/Lake1059/FFmpegFreeUI) 的 macOS 原生迁移尝试。原项目的设计、页面顺序、参数命名、预设兼容策略和大量功能行为是 `FFmpegFreeSwiftUI` 的重要参考。
 
 感谢 `FFmpegFreeUI` 原作者及其项目贡献者长期维护 3FUI，也感谢原项目为本迁移版提供的设计基础、功能语义和兼容性参照。若需要 Windows 原版、最新发布包或原项目文档，请访问原仓库：[https://github.com/Lake1059/FFmpegFreeUI](https://github.com/Lake1059/FFmpegFreeUI)。
+
+本 macOS 迁移项目的代码、文档和测试由 OpenAI Codex 在用户持续指导下协助编写与迭代。
