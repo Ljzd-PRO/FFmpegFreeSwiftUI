@@ -1,0 +1,187 @@
+name: Release macOS App
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: "Release tag to create or reuse, for example v1.0.0"
+        required: true
+        type: string
+      draft:
+        description: "Create as draft release"
+        required: false
+        default: false
+        type: boolean
+      prerelease:
+        description: "Mark as prerelease"
+        required: false
+        default: false
+        type: boolean
+      run_tests:
+        description: "Run command-only tests before packaging"
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+
+env:
+  PROJECT: FFmpegFreeSwiftUI.xcodeproj
+  APP_SCHEME: FFmpegFreeSwiftUI-Release
+  TEST_SCHEME: FFmpegFreeSwiftUI-CommandOnlyTests
+  CONFIGURATION: Release
+  DERIVED_DATA: build/DerivedData
+  APP_NAME: FFmpegFreeSwiftUI
+  RELEASE_NOTE: ReleaseNote.md
+
+jobs:
+  release:
+    name: Build and release FFmpegFreeSwiftUI
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Resolve release metadata
+        id: metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            RELEASE_TAG="${{ github.event.inputs.tag_name }}"
+            DRAFT="${{ github.event.inputs.draft }}"
+            PRERELEASE="${{ github.event.inputs.prerelease }}"
+            RUN_TESTS="${{ github.event.inputs.run_tests }}"
+          else
+            RELEASE_TAG="$GITHUB_REF_NAME"
+            DRAFT="false"
+            PRERELEASE="false"
+            RUN_TESTS="true"
+          fi
+
+          if [[ -z "$RELEASE_TAG" || "$RELEASE_TAG" != v* ]]; then
+            echo "Release tag must start with v, got: $RELEASE_TAG" >&2
+            exit 1
+          fi
+
+          if [[ ! -s "$RELEASE_NOTE" ]]; then
+            echo "Release note file is missing or empty: $RELEASE_NOTE" >&2
+            exit 1
+          fi
+
+          VERSION="${RELEASE_TAG#v}"
+          echo "tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "draft=$DRAFT" >> "$GITHUB_OUTPUT"
+          echo "prerelease=$PRERELEASE" >> "$GITHUB_OUTPUT"
+          echo "run_tests=$RUN_TESTS" >> "$GITHUB_OUTPUT"
+
+      - name: Show build environment
+        run: |
+          set -euo pipefail
+          sw_vers
+          xcodebuild -version
+          swift --version
+          xcodebuild -list -project "$PROJECT"
+
+      - name: SwiftPM build
+        run: |
+          set -euo pipefail
+          swift build
+
+      - name: Command-only tests
+        if: steps.metadata.outputs.run_tests == 'true'
+        run: |
+          set -euo pipefail
+          swift run FFmpegFreeSwiftUITestRunner --mode command-only
+          xcodebuild \
+            -project "$PROJECT" \
+            -scheme "$TEST_SCHEME" \
+            -configuration Debug \
+            -destination 'platform=macOS' \
+            test
+
+      - name: Build Release app
+        run: |
+          set -euo pipefail
+          rm -rf "$DERIVED_DATA"
+          xcodebuild \
+            -project "$PROJECT" \
+            -scheme "$APP_SCHEME" \
+            -configuration "$CONFIGURATION" \
+            -destination 'platform=macOS' \
+            -derivedDataPath "$DERIVED_DATA" \
+            clean build \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY=- \
+            DEVELOPMENT_TEAM=
+
+      - name: Package app
+        id: package
+        run: |
+          set -euo pipefail
+          APP_PATH="$DERIVED_DATA/Build/Products/$CONFIGURATION/$APP_NAME.app"
+          test -d "$APP_PATH"
+
+          ARTIFACT_DIR="build/artifacts"
+          mkdir -p "$ARTIFACT_DIR"
+
+          ZIP_PATH="$ARTIFACT_DIR/${APP_NAME}-${{ steps.metadata.outputs.version }}-macOS.zip"
+          ditto -c -k --sequesterRsrc --keepParent "$APP_PATH" "$ZIP_PATH"
+
+          echo "zip_path=$ZIP_PATH" >> "$GITHUB_OUTPUT"
+          echo "zip_name=$(basename "$ZIP_PATH")" >> "$GITHUB_OUTPUT"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.package.outputs.zip_name }}
+          path: ${{ steps.package.outputs.zip_path }}
+          if-no-files-found: error
+
+      - name: Create tag for manual release
+        if: github.event_name == 'workflow_dispatch'
+        shell: bash
+        run: |
+          set -euo pipefail
+          RELEASE_TAG="${{ steps.metadata.outputs.tag }}"
+
+          git fetch --tags --force
+
+          if git rev-parse -q --verify "refs/tags/$RELEASE_TAG" >/dev/null; then
+            TAG_SHA="$(git rev-list -n 1 "$RELEASE_TAG")"
+            if [[ "$TAG_SHA" != "$GITHUB_SHA" ]]; then
+              echo "Tag $RELEASE_TAG already exists at $TAG_SHA, but this workflow is running at $GITHUB_SHA." >&2
+              echo "Run the workflow from the tagged commit or choose a new tag." >&2
+              exit 1
+            fi
+            echo "Tag $RELEASE_TAG already points to this commit."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git tag -a "$RELEASE_TAG" -m "Release $RELEASE_TAG"
+            git push origin "refs/tags/$RELEASE_TAG"
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.metadata.outputs.tag }}
+          name: FFmpegFreeSwiftUI ${{ steps.metadata.outputs.tag }}
+          body_path: ${{ env.RELEASE_NOTE }}
+          files: ${{ steps.package.outputs.zip_path }}
+          draft: ${{ steps.metadata.outputs.draft }}
+          prerelease: ${{ steps.metadata.outputs.prerelease }}
