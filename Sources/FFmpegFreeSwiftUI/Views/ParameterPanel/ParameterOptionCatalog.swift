@@ -123,10 +123,10 @@ enum ParameterOptionCatalog {
         options: opts(["", "-crf", "-cq", "-qp", "-global_quality"])
     )
     static let qualityValue = ParameterFieldInfo(title: "质量值", placeholder: "质量值")
-    static let bitrateBase = ParameterFieldInfo(title: "比特率基础", placeholder: "-b:v", help: "传统转码直接指定数据速率；记得带单位，例如 5000k、5m。")
+    static let bitrateBase = ParameterFieldInfo(title: "比特率基础", placeholder: "-b:v", help: "VideoToolbox 控制文件大小的主参数；记得带单位，例如 5000k、5M。大小可粗略估算为：码率 Mbps × 时长分钟 × 7.5。")
     static let bitrateMin = ParameterFieldInfo(title: "最低值", placeholder: "-minrate")
-    static let bitrateMax = ParameterFieldInfo(title: "最高值", placeholder: "-maxrate")
-    static let bitrateBuffer = ParameterFieldInfo(title: "缓冲区", placeholder: "-bufsize")
+    static let bitrateMax = ParameterFieldInfo(title: "最高值", placeholder: "-maxrate", help: "限制峰值码率；用于播放兼容或直播。普通转码可留空，填写时通常为 -b:v 的 1.5 到 2 倍。")
+    static let bitrateBuffer = ParameterFieldInfo(title: "缓冲区", placeholder: "-bufsize", help: "与 -maxrate 配合使用，影响码率波动缓冲。普通转码可留空，填写时通常为 -b:v 的 2 倍左右。")
     static let advancedQuality = ParameterFieldInfo(title: "进阶参数集", placeholder: "-x265-params key=value 或多个参数", help: "添加预制或空项然后编辑参数；编码器内部小参可在自定义参数里写。")
 
     static let pixelFormat = ParameterFieldInfo(
@@ -417,6 +417,31 @@ enum ParameterOptionCatalog {
         return videoTune
     }
 
+    static func profileInfo(for encoder: String) -> ParameterFieldInfo {
+        switch VideoToolboxEncoderKind(encoder: encoder) {
+        case .h264:
+            return ParameterFieldInfo(
+                title: videoProfile.title,
+                placeholder: "-profile:v",
+                help: "H.264 VideoToolbox 常用 high；老设备兼容可选 main 或 baseline。它不是画质滑杆，主要影响兼容规格。"
+            )
+        case .hevc:
+            return ParameterFieldInfo(
+                title: videoProfile.title,
+                placeholder: "-profile:v",
+                help: "HEVC VideoToolbox 普通 8-bit 视频选 main；10-bit/HDR 输入可选 main10 并配合 p010le。"
+            )
+        case .prores:
+            return ParameterFieldInfo(
+                title: videoProfile.title,
+                placeholder: "ProRes 档位",
+                help: "ProRes 的 profile 是主要质量/大小档位：proxy 最小，lt 较小，standard 标准，hq 更高，4444/xq 文件很大。"
+            )
+        case .none:
+            return videoProfile
+        }
+    }
+
     static func gpuInfo(for encoder: String) -> ParameterFieldInfo {
         if VideoEncoderCapabilityCatalog.isVideoToolboxEncoder(encoder) {
             return ParameterFieldInfo(
@@ -443,10 +468,18 @@ enum ParameterOptionCatalog {
 
     static func bitrateControlInfo(for encoder: String, probedCapabilities: [String: VideoEncoderCapability] = [:]) -> ParameterFieldInfo {
         if let capability = VideoEncoderCapabilityCatalog.capability(for: encoder, probed: probedCapabilities) {
+            if VideoToolboxEncoderKind(encoder: encoder) == .prores {
+                return ParameterFieldInfo(
+                    title: bitrateControl.title,
+                    placeholder: "ProRes profile 控制质量档位",
+                    help: "ProRes 的文件大小主要由 profile 档位决定，不建议用 -b:v 或 -q:v 来压小文件。",
+                    options: opts(capability.bitrateControlModes)
+                )
+            }
             return ParameterFieldInfo(
                 title: bitrateControl.title,
                 placeholder: "VideoToolbox 控制方式",
-                help: "VideoToolbox 不使用 CRF/CQ/QP 模型；优先使用 -q:v、-b:v、-maxrate/-bufsize 或 -constant_bit_rate 1。",
+                help: "想控制文件大小选 -b:v；想省心控制画质选 -q:v 65。CRF/CQ/QP 是其他编码器语义，不建议用于 VT。",
                 options: opts(capability.bitrateControlModes)
             )
         }
@@ -455,6 +488,14 @@ enum ParameterOptionCatalog {
 
     static func qualityArgumentInfo(for encoder: String, probedCapabilities: [String: VideoEncoderCapability] = [:]) -> ParameterFieldInfo {
         if let capability = VideoEncoderCapabilityCatalog.capability(for: encoder, probed: probedCapabilities) {
+            if VideoToolboxEncoderKind(encoder: encoder) == .prores {
+                return ParameterFieldInfo(
+                    title: qualityArgument.title,
+                    placeholder: "通常留空",
+                    help: "ProRes VideoToolbox 使用 profile 档位控制质量和大小；这里通常不填写。",
+                    options: opts(capability.qualityArguments)
+                )
+            }
             return ParameterFieldInfo(
                 title: qualityArgument.title,
                 placeholder: "VideoToolbox 建议 -q:v",
@@ -467,10 +508,18 @@ enum ParameterOptionCatalog {
 
     static func qualityValueInfo(for encoder: String, probedCapabilities: [String: VideoEncoderCapability] = [:]) -> ParameterFieldInfo {
         if let capability = VideoEncoderCapabilityCatalog.capability(for: encoder, probed: probedCapabilities) {
+            if VideoToolboxEncoderKind(encoder: encoder) == .prores {
+                return ParameterFieldInfo(
+                    title: qualityValue.title,
+                    placeholder: "通常留空",
+                    help: "ProRes 的质量值通常不填；请在编码器页选择 proxy、lt、standard、hq、4444 或 xq。",
+                    options: opts(capability.qualityValues)
+                )
+            }
             return ParameterFieldInfo(
                 title: qualityValue.title,
-                placeholder: "例如 45 / 50 / 55 / 60 / 65",
-                help: "VideoToolbox 的 -q:v 可作为质量倾向；实际效果受系统编码器、码率约束和输入格式影响。",
+                placeholder: "例如 50 / 65 / 75 / 80",
+                help: "VideoToolbox 的 -q:v 可作为质量倾向：50 偏小，65 平衡，75 高质量，80 以上文件会明显变大。",
                 options: opts(capability.qualityValues)
             )
         }
@@ -479,10 +528,18 @@ enum ParameterOptionCatalog {
 
     static func advancedQualityInfo(for encoder: String, probedCapabilities: [String: VideoEncoderCapability] = [:]) -> ParameterFieldInfo {
         if let capability = VideoEncoderCapabilityCatalog.capability(for: encoder, probed: probedCapabilities) {
+            if VideoToolboxEncoderKind(encoder: encoder) == .prores {
+                return ParameterFieldInfo(
+                    title: advancedQuality.title,
+                    placeholder: "通常留空",
+                    help: "ProRes VideoToolbox 的质量和大小主要由 profile 档位决定；这里的实时、省电、软编选项通常不需要填写。",
+                    options: opts(capability.advancedQualityArguments)
+                )
+            }
             return ParameterFieldInfo(
                 title: advancedQuality.title,
                 placeholder: "-realtime 1 / -allow_sw 1 / -tag:v hvc1",
-                help: "VideoToolbox 专属参数会拼接到视频参数末尾；下拉候选来自静态表，并会用本机 ffmpeg 探测结果过滤。",
+                help: "VideoToolbox 专属参数会拼接到视频参数末尾；普通转码通常留空，直播/录屏才考虑 -realtime 1。",
                 options: opts(capability.advancedQualityArguments)
             )
         }
@@ -523,4 +580,3 @@ enum ParameterOptionCatalog {
         opts(values.split(separator: " ").map(String.init))
     }
 }
-

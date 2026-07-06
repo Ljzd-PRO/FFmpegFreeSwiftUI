@@ -142,14 +142,14 @@ public enum VideoEncoderCapabilityCatalog {
             "-max_ref_frames 1"
         ]
         let qualityArguments = ["", "-q:v"]
-        let qualityValues = ["", "45", "50", "55", "60", "65"]
+        let qualityValues = ["", "50", "55", "65", "75", "80"]
         let bitrateModes = [
             "",
-            "VideoToolbox 质量 -q:v",
-            "平均码率 -b:v",
-            "码率约束 -maxrate/-bufsize",
-            "恒定码率 -constant_bit_rate 1",
-            "实时编码 -realtime 1"
+            "控大小：平均码率 -b:v",
+            "省心画质：质量等级 -q:v 65",
+            "限制峰值：-maxrate/-bufsize",
+            "平台要求：恒定码率 -constant_bit_rate 1",
+            "直播录屏：实时编码 -realtime 1"
         ]
 
         switch kind {

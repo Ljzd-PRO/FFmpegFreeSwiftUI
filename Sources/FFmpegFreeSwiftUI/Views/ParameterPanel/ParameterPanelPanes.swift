@@ -94,10 +94,16 @@ struct VideoEncoderPane: View {
     }
 
     private var sectionNote: String {
-        if VideoEncoderCapabilityCatalog.isVideoToolboxEncoder(preset.videoEncoder) {
-            return "VideoToolbox 使用 macOS 系统硬件编码，不支持 x264/x265 的 preset/tune/CRF 语义。质量优先使用 -q:v 或码率参数；低延迟使用 -realtime 1。"
+        switch VideoToolboxEncoderKind(encoder: preset.videoEncoder) {
+        case .h264:
+            return "H.264 VideoToolbox 兼容性最好，适合发给别人或上传平台。它不支持 x264/x265 的 preset/tune/CRF 语义。"
+        case .hevc:
+            return "HEVC VideoToolbox 同等观感下通常比 H.264 更省体积，适合较新设备。建议 MP4 输出搭配 -tag:v hvc1。"
+        case .prores:
+            return "ProRes VideoToolbox 适合剪辑中间文件，文件会很大，不适合压小视频；质量/大小主要由 profile 档位决定。"
+        case .none:
+            return "视频编码器通用配置；部分编码器的参数名有区别，会自动使用对应参数名。以上三个参数还有很多值尚未收录，欢迎反馈补充和修正。"
         }
-        return "视频编码器通用配置；部分编码器的参数名有区别，会自动使用对应参数名。以上三个参数还有很多值尚未收录，欢迎反馈补充和修正。"
     }
 
     var body: some View {
@@ -111,8 +117,8 @@ struct VideoEncoderPane: View {
             FormRow(label: "编码预设", help: ParameterOptionCatalog.presetInfo(for: preset.videoEncoder).help) {
                 FieldComboBox(text: $preset.videoPreset, info: ParameterOptionCatalog.presetInfo(for: preset.videoEncoder), options: profile.presets)
             }
-            FormRow(label: "配置文件", help: ParameterOptionCatalog.videoProfile.help) {
-                FieldComboBox(text: $preset.videoProfile, info: ParameterOptionCatalog.videoProfile, options: profile.profiles)
+            FormRow(label: "配置文件", help: ParameterOptionCatalog.profileInfo(for: preset.videoEncoder).help) {
+                FieldComboBox(text: $preset.videoProfile, info: ParameterOptionCatalog.profileInfo(for: preset.videoEncoder), options: profile.profiles)
             }
             FormRow(label: "场景优化", help: ParameterOptionCatalog.tuneInfo(for: preset.videoEncoder).help) {
                 FieldComboBox(text: $preset.videoTune, info: ParameterOptionCatalog.tuneInfo(for: preset.videoEncoder), options: profile.tunes)
@@ -158,10 +164,14 @@ struct VideoQualityPane: View {
     var probedCapabilities: [String: VideoEncoderCapability]
 
     private var sectionNote: String {
-        if VideoEncoderCapabilityCatalog.isVideoToolboxEncoder(preset.videoEncoder) {
-            return "VideoToolbox 不使用软件编码器的 CRF/CQ/QP 模型。建议用 -q:v 表示质量倾向，或用 -b:v、-maxrate、-bufsize 做码率控制。"
+        switch VideoToolboxEncoderKind(encoder: preset.videoEncoder) {
+        case .h264, .hevc:
+            return "VideoToolbox 控制大小优先填 -b:v；不想计算大小可用 -q:v 65。大小可粗略估算为：码率 Mbps × 时长分钟 × 7.5。"
+        case .prores:
+            return "ProRes 不适合压小文件，优先在编码器页选择 profile 档位：proxy < lt < standard < hq < 4444 < xq。"
+        case .none:
+            return "传统的转码直接指定数据速率；对于压制工作通常不考虑。基础比特率与全局质量控制可能冲突。"
         }
-        return "传统的转码直接指定数据速率；对于压制工作通常不考虑。基础比特率与全局质量控制可能冲突。"
     }
 
     var body: some View {
@@ -181,10 +191,10 @@ struct VideoQualityPane: View {
             FormRow(label: "最低值") {
                 FieldComboBox(text: $preset.bitrateMin, info: ParameterOptionCatalog.bitrateMin)
             }
-            FormRow(label: "最高值") {
+            FormRow(label: "最高值", help: ParameterOptionCatalog.bitrateMax.help) {
                 FieldComboBox(text: $preset.bitrateMax, info: ParameterOptionCatalog.bitrateMax)
             }
-            FormRow(label: "缓冲区") {
+            FormRow(label: "缓冲区", help: ParameterOptionCatalog.bitrateBuffer.help) {
                 FieldComboBox(text: $preset.bitrateBuffer, info: ParameterOptionCatalog.bitrateBuffer)
             }
             FormRow(label: "进阶参数集", help: ParameterOptionCatalog.advancedQualityInfo(for: preset.videoEncoder, probedCapabilities: probedCapabilities).help) {

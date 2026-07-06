@@ -186,8 +186,13 @@ public func makeCommandOnlyTests() -> [TestCase] {
             try expect(hevc.profiles.contains("main10"), "hevc videotoolbox should include main10")
             try expect(hevc.pixelFormats.contains("p010le"), "hevc videotoolbox should include p010le")
             try expect(hevc.pixelFormats.contains("p210le"), "hevc videotoolbox should include p210le")
+            try expect(h264.qualityValues.contains("75"), "h264 videotoolbox should suggest q:v 75")
+            try expect(h264.qualityValues.contains("80"), "h264 videotoolbox should suggest q:v 80")
+            try expect(hevc.qualityValues.contains("75"), "hevc videotoolbox should suggest q:v 75")
+            try expect(hevc.qualityValues.contains("80"), "hevc videotoolbox should suggest q:v 80")
             try expect(prores.profiles.contains("hq"), "prores videotoolbox should include hq")
             try expect(prores.profiles.contains("xq"), "prores videotoolbox should include xq")
+            try expect(!prores.qualityArguments.contains("-q:v"), "prores videotoolbox should steer quality through profile")
         },
         TestCase("VideoToolbox", "Skips generic encoder options") { _ in
             var preset = PresetData()
