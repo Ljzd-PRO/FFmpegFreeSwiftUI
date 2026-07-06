@@ -159,46 +159,225 @@ struct VideoFramePane: View {
     }
 }
 
+private enum VideoToolboxQualityTarget: String, CaseIterable, Identifiable {
+    case size = "vt_size"
+    case quality = "vt_quality"
+    case advanced = "vt_advanced"
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .size: return "-b:v"
+        case .quality: return "-q:v"
+        case .advanced: return "-maxrate / -bufsize"
+        }
+    }
+
+    var help: String {
+        switch self {
+        case .size:
+            return "-b:v 用于按视频码率控制文件大小。"
+        case .quality:
+            return "-q:v 用于按质量等级控制画质，文件大小由编码器决定。"
+        case .advanced:
+            return "-maxrate / -bufsize 用于限制峰值码率和码率波动。"
+        }
+    }
+
+    static func resolved(for preset: PresetData) -> VideoToolboxQualityTarget {
+        let raw = preset.bitrateControlMode.trimmingCharacters(in: .whitespacesAndNewlines)
+        if let target = VideoToolboxQualityTarget(rawValue: raw) {
+            return target
+        }
+
+        let lowercased = raw.lowercased()
+        if lowercased.contains("-q:v") || lowercased.contains("quality") || raw.contains("质量") {
+            return .quality
+        }
+        if lowercased.contains("maxrate")
+            || lowercased.contains("bufsize")
+            || lowercased.contains("constant_bit_rate")
+            || lowercased.contains("realtime")
+            || raw.contains("约束") {
+            return .advanced
+        }
+        if lowercased.contains("vbr") || lowercased.contains("-b:v") || raw.contains("平均码率") || raw.contains("控大小") {
+            return .size
+        }
+        if !preset.qualityValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            && preset.bitrateBase.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return .quality
+        }
+        if !preset.bitrateMin.isEmpty || !preset.bitrateMax.isEmpty || !preset.bitrateBuffer.isEmpty || !preset.advancedQualityArguments.isEmpty {
+            return .advanced
+        }
+        return .size
+    }
+}
+
 struct VideoQualityPane: View {
     @Binding var preset: PresetData
     var probedCapabilities: [String: VideoEncoderCapability]
 
-    private var sectionNote: String {
+    var body: some View {
         switch VideoToolboxEncoderKind(encoder: preset.videoEncoder) {
         case .h264, .hevc:
-            return "VideoToolbox 控制大小优先填 -b:v；不想计算大小可用 -q:v 65。大小可粗略估算为：码率 Mbps × 时长分钟 × 7.5。"
+            VideoToolboxQualityPane(preset: $preset, probedCapabilities: probedCapabilities)
         case .prores:
-            return "ProRes 不适合压小文件，优先在编码器页选择 profile 档位：proxy < lt < standard < hq < 4444 < xq。"
+            ProResQualityPane(preset: $preset)
         case .none:
-            return "传统的转码直接指定数据速率；对于压制工作通常不考虑。基础比特率与全局质量控制可能冲突。"
+            GenericVideoQualityPane(preset: $preset)
         }
+    }
+}
+
+struct VideoToolboxQualityPane: View {
+    @Binding var preset: PresetData
+    var probedCapabilities: [String: VideoEncoderCapability]
+
+    private var selectedTarget: VideoToolboxQualityTarget {
+        VideoToolboxQualityTarget.resolved(for: preset)
+    }
+
+    private var targetBinding: Binding<VideoToolboxQualityTarget> {
+        Binding(
+            get: { VideoToolboxQualityTarget.resolved(for: preset) },
+            set: { preset.bitrateControlMode = $0.rawValue }
+        )
+    }
+
+    private var qualityValueBinding: Binding<String> {
+        Binding(
+            get: { preset.qualityValue },
+            set: { newValue in
+                preset.qualityValue = newValue
+                if !newValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                   normalizeOptionNameInput(preset.qualityArgumentName) != "-q:v" {
+                    preset.qualityArgumentName = ""
+                }
+            }
+        )
     }
 
     var body: some View {
-        FormSection(title: "视频参数质量", note: sectionNote) {
-            FormRow(label: "控制方式", help: ParameterOptionCatalog.bitrateControlInfo(for: preset.videoEncoder, probedCapabilities: probedCapabilities).help) {
-                FieldComboBox(text: $preset.bitrateControlMode, info: ParameterOptionCatalog.bitrateControlInfo(for: preset.videoEncoder, probedCapabilities: probedCapabilities))
+        FormSection(
+            title: "视频参数质量",
+            note: "VideoToolbox 控制大小优先填 -b:v；不想计算大小可用 -q:v 65。切换控制目标只改变本页显示，不会清空已填写参数。"
+        ) {
+            FormRow(label: "控制目标", help: selectedTarget.help + " 这是页面显示方式，不会作为 ffmpeg 参数写入命令。") {
+                Picker("", selection: targetBinding) {
+                    ForEach(VideoToolboxQualityTarget.allCases) { target in
+                        Text(target.title).tag(target)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
             }
-            FormRow(label: "质量参数名", help: ParameterOptionCatalog.qualityArgumentInfo(for: preset.videoEncoder, probedCapabilities: probedCapabilities).help) {
-                FieldComboBox(text: $preset.qualityArgumentName, info: ParameterOptionCatalog.qualityArgumentInfo(for: preset.videoEncoder, probedCapabilities: probedCapabilities), normalize: normalizeOptionNameInput)
+
+            switch selectedTarget {
+            case .size:
+                FormRow(label: "视频码率 (-b:v)", help: ParameterOptionCatalog.videoToolboxBitrate.help) {
+                    FieldComboBox(text: $preset.bitrateBase, info: ParameterOptionCatalog.videoToolboxBitrate)
+                }
+                FormRow(label: "估算公式") {
+                    Text("文件大小 MB ≈ 视频码率 Mbps × 时长分钟 × 7.5。例：10 分钟、4 Mbps 大约 300 MB。")
+                        .foregroundStyle(.secondary)
+                        .textSelection(.enabled)
+                }
+            case .quality:
+                FormRow(label: "质量等级 (-q:v)", help: ParameterOptionCatalog.videoToolboxQualityValue.help) {
+                    FieldComboBox(text: qualityValueBinding, info: ParameterOptionCatalog.videoToolboxQualityValue)
+                }
+                FormRow(label: "推荐值") {
+                    Text("先用 65；文件太大降到 55，画面不够清楚升到 75。")
+                        .foregroundStyle(.secondary)
+                        .textSelection(.enabled)
+                }
+            case .advanced:
+                FormRow(label: "最低码率 (-minrate)", help: ParameterOptionCatalog.videoToolboxMinrate.help) {
+                    FieldComboBox(text: $preset.bitrateMin, info: ParameterOptionCatalog.videoToolboxMinrate)
+                }
+                FormRow(label: "峰值码率 (-maxrate)", help: ParameterOptionCatalog.videoToolboxMaxrate.help) {
+                    FieldComboBox(text: $preset.bitrateMax, info: ParameterOptionCatalog.videoToolboxMaxrate)
+                }
+                FormRow(label: "缓冲区 (-bufsize)", help: ParameterOptionCatalog.videoToolboxBufsize.help) {
+                    FieldComboBox(text: $preset.bitrateBuffer, info: ParameterOptionCatalog.videoToolboxBufsize)
+                }
+                FormRow(label: "VideoToolbox 进阶参数", help: ParameterOptionCatalog.advancedQualityInfo(for: preset.videoEncoder, probedCapabilities: probedCapabilities).help) {
+                    FieldComboBox(text: stringArrayBinding($preset.advancedQualityArguments), info: ParameterOptionCatalog.advancedQualityInfo(for: preset.videoEncoder, probedCapabilities: probedCapabilities))
+                }
             }
-            FormRow(label: "质量值", help: ParameterOptionCatalog.qualityValueInfo(for: preset.videoEncoder, probedCapabilities: probedCapabilities).help) {
-                FieldComboBox(text: $preset.qualityValue, info: ParameterOptionCatalog.qualityValueInfo(for: preset.videoEncoder, probedCapabilities: probedCapabilities))
+        }
+        .onAppear(perform: normalizeTargetMode)
+    }
+
+    private func normalizeTargetMode() {
+        let target = VideoToolboxQualityTarget.resolved(for: preset)
+        let raw = preset.bitrateControlMode.trimmingCharacters(in: .whitespacesAndNewlines)
+        if VideoToolboxQualityTarget(rawValue: raw) == nil {
+            preset.bitrateControlMode = target.rawValue
+        }
+    }
+}
+
+struct ProResQualityPane: View {
+    @Binding var preset: PresetData
+
+    var body: some View {
+        FormSection(
+            title: "视频参数质量",
+            note: "ProRes VideoToolbox 是剪辑中间格式，文件会很大；质量和大小主要由编码器页的 profile 档位决定。"
+        ) {
+            FormRow(label: "当前档位") {
+                Text(preset.videoProfile.isEmpty ? "auto" : preset.videoProfile)
+                    .foregroundStyle(.secondary)
+                    .textSelection(.enabled)
             }
-            FormRow(label: "比特率基础", help: ParameterOptionCatalog.bitrateBase.help) {
+            FormRow(label: "调整位置") {
+                Text("请到“视频参数编码器”的“配置文件”选择 proxy、lt、standard、hq、4444 或 xq。")
+                    .foregroundStyle(.secondary)
+                    .textSelection(.enabled)
+            }
+            if !preset.qualityArgumentName.isEmpty || !preset.qualityValue.isEmpty {
+                FormRow(label: "已忽略") {
+                    Text("ProRes 不使用这里的质量参数名或质量值；命令生成会跳过它们。")
+                        .foregroundStyle(.secondary)
+                        .textSelection(.enabled)
+                }
+            }
+        }
+    }
+}
+
+struct GenericVideoQualityPane: View {
+    @Binding var preset: PresetData
+
+    var body: some View {
+        FormSection(title: "视频参数质量", note: "传统的转码直接指定数据速率；对于压制工作通常不考虑。基础比特率与全局质量控制可能冲突。") {
+            FormRow(label: "控制方式", help: ParameterOptionCatalog.bitrateControl.help) {
+                FieldComboBox(text: $preset.bitrateControlMode, info: ParameterOptionCatalog.bitrateControl)
+            }
+            FormRow(label: "自定义质量参数", help: ParameterOptionCatalog.qualityArgument.help) {
+                FieldComboBox(text: $preset.qualityArgumentName, info: ParameterOptionCatalog.qualityArgument, normalize: normalizeOptionNameInput)
+            }
+            FormRow(label: "自定义质量值") {
+                FieldComboBox(text: $preset.qualityValue, info: ParameterOptionCatalog.qualityValue)
+            }
+            FormRow(label: "视频码率 (-b:v)", help: ParameterOptionCatalog.bitrateBase.help) {
                 FieldComboBox(text: $preset.bitrateBase, info: ParameterOptionCatalog.bitrateBase)
             }
-            FormRow(label: "最低值") {
+            FormRow(label: "最低码率 (-minrate)") {
                 FieldComboBox(text: $preset.bitrateMin, info: ParameterOptionCatalog.bitrateMin)
             }
-            FormRow(label: "最高值", help: ParameterOptionCatalog.bitrateMax.help) {
+            FormRow(label: "峰值码率 (-maxrate)", help: ParameterOptionCatalog.bitrateMax.help) {
                 FieldComboBox(text: $preset.bitrateMax, info: ParameterOptionCatalog.bitrateMax)
             }
-            FormRow(label: "缓冲区", help: ParameterOptionCatalog.bitrateBuffer.help) {
+            FormRow(label: "缓冲区 (-bufsize)", help: ParameterOptionCatalog.bitrateBuffer.help) {
                 FieldComboBox(text: $preset.bitrateBuffer, info: ParameterOptionCatalog.bitrateBuffer)
             }
-            FormRow(label: "进阶参数集", help: ParameterOptionCatalog.advancedQualityInfo(for: preset.videoEncoder, probedCapabilities: probedCapabilities).help) {
-                FieldComboBox(text: stringArrayBinding($preset.advancedQualityArguments), info: ParameterOptionCatalog.advancedQualityInfo(for: preset.videoEncoder, probedCapabilities: probedCapabilities))
+            FormRow(label: "进阶参数集", help: ParameterOptionCatalog.advancedQuality.help) {
+                FieldComboBox(text: stringArrayBinding($preset.advancedQualityArguments), info: ParameterOptionCatalog.advancedQuality)
             }
         }
     }

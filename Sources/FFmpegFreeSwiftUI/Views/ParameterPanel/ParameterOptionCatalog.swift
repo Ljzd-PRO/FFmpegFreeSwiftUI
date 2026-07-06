@@ -128,6 +128,30 @@ enum ParameterOptionCatalog {
     static let bitrateMax = ParameterFieldInfo(title: "最高值", placeholder: "-maxrate", help: "限制峰值码率；用于播放兼容或直播。普通转码可留空，填写时通常为 -b:v 的 1.5 到 2 倍。")
     static let bitrateBuffer = ParameterFieldInfo(title: "缓冲区", placeholder: "-bufsize", help: "与 -maxrate 配合使用，影响码率波动缓冲。普通转码可留空，填写时通常为 -b:v 的 2 倍左右。")
     static let advancedQuality = ParameterFieldInfo(title: "进阶参数集", placeholder: "-x265-params key=value 或多个参数", help: "添加预制或空项然后编辑参数；编码器内部小参可在自定义参数里写。")
+    static let videoToolboxBitrate = ParameterFieldInfo(
+        title: "视频码率 (-b:v)",
+        placeholder: "例如 5M / 8000k",
+        help: "控制文件大小的主参数。大小可粗略估算为：码率 Mbps × 时长分钟 × 7.5。",
+        options: [
+            ParameterOption(title: "", value: ""),
+            ParameterOption(title: "720p30 小体积 2500k", value: "2500k"),
+            ParameterOption(title: "720p30 清晰 4M", value: "4M"),
+            ParameterOption(title: "1080p30 小体积 6M", value: "6M"),
+            ParameterOption(title: "1080p30 清晰 8M", value: "8M"),
+            ParameterOption(title: "1080p60 平衡 12M", value: "12M"),
+            ParameterOption(title: "4K30 HEVC 平衡 25M", value: "25M"),
+            ParameterOption(title: "4K60 HEVC 平衡 45M", value: "45M")
+        ]
+    )
+    static let videoToolboxQualityValue = ParameterFieldInfo(
+        title: "质量等级 (-q:v)",
+        placeholder: "推荐 65",
+        help: "50 偏小，65 平衡，75 高质量，80 以上文件会明显变大。",
+        options: opts(["", "50", "55", "65", "75", "80"])
+    )
+    static let videoToolboxMinrate = ParameterFieldInfo(title: "最低码率 (-minrate)", placeholder: "通常留空", help: "普通转码通常不需要最低码率；只有平台明确要求码率范围时再填写。")
+    static let videoToolboxMaxrate = ParameterFieldInfo(title: "峰值码率 (-maxrate)", placeholder: "例如 8M / 12000k", help: "限制峰值码率；用于播放兼容或直播。普通转码可留空，填写时通常为 -b:v 的 1.5 到 2 倍。")
+    static let videoToolboxBufsize = ParameterFieldInfo(title: "缓冲区 (-bufsize)", placeholder: "例如 10M / 16000k", help: "与 -maxrate 配合使用，影响码率波动缓冲。普通转码可留空，填写时通常为 -b:v 的 2 倍左右。")
 
     static let pixelFormat = ParameterFieldInfo(
         title: "像素格式",
