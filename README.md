@@ -80,6 +80,64 @@ Windows 版可依赖 Windows 侧硬件监控能力。macOS 版不引入私有 AP
 - 支持简体中文、繁体中文、英语运行时切换。
 - UDP 远程调用保留原参数风格，默认端口 `10591`。
 
+## 界面预览
+
+以下截图来自 `v1.0.0`，展示当前 macOS 原生 SwiftUI 版本的主要工作流。界面保持 v5 页面顺序，并使用 macOS 侧边栏、菜单栏和原生控件组织操作。
+
+### 起始页与导航
+
+起始页显示版本号、常用链接和基础工作流提示；左侧导航按 v5 功能顺序排列。
+
+<p align="center">
+  <img src="docs/assets/screenshots/start-page.png" alt="FFmpegFreeSwiftUI 起始页与侧边栏导航" width="900">
+</p>
+
+### 编码队列
+
+编码队列集中显示任务状态、进度、效率、输出大小、比特率和剩余时间，底部保留实时输出、命令行和 stdin 消息入口。
+
+<p align="center">
+  <img src="docs/assets/screenshots/encoding-queue.png" alt="FFmpegFreeSwiftUI 编码队列" width="900">
+</p>
+
+### 参数面板
+
+参数面板保留 v5 的分组结构。VideoToolbox 相关页面会按 macOS 编码器特性显示参数名、说明和候选项，避免把 x264 / x265 的参数误用于 VideoToolbox。
+
+<table>
+  <tr>
+    <td width="50%">
+      <img src="docs/assets/screenshots/parameter-quality.png" alt="VideoToolbox 视频质量参数页">
+    </td>
+    <td width="50%">
+      <img src="docs/assets/screenshots/parameter-encoder.png" alt="VideoToolbox 视频编码器参数页">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">视频参数质量：以 `-b:v`、`-q:v`、`-maxrate / -bufsize` 为控制目标。</td>
+    <td align="center">视频参数编码器：按编码器类型展示 VideoToolbox 适用项。</td>
+  </tr>
+</table>
+
+### 设置与性能监控
+
+设置页支持自动检测或手动指定 `ffmpeg`、`ffprobe`、`ffplay` 路径；性能监控页展示 CPU、内存、磁盘和编码队列负载，避免显示 macOS 无权限模式下不可稳定读取的硬件指标。
+
+<table>
+  <tr>
+    <td width="50%">
+      <img src="docs/assets/screenshots/settings-ffmpeg.png" alt="FFmpeg 路径检测与设置">
+    </td>
+    <td width="50%">
+      <img src="docs/assets/screenshots/performance-monitor.png" alt="性能监控仪表盘">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">FFmpeg 路径：可自动检测 Homebrew、PATH 或用户自定义位置。</td>
+    <td align="center">性能监控：以无权限可读指标展示系统与队列负载。</td>
+  </tr>
+</table>
+
 ## VideoToolbox 视频质量与大小控制指南
 
 VideoToolbox 是 Apple 提供的硬件视频编码能力，优点是速度快、功耗低，适合 macOS 上的日常转码。它和 x264 / x265 的参数体系不同：想控制文件大小，优先设置视频码率；想省心控制画质，可以设置视频质量等级。
