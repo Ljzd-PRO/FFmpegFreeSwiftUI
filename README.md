@@ -92,6 +92,16 @@ VideoToolbox 是 Apple 提供的硬件视频编码能力，优点是速度快、
 | 想文件更小 | 用 HEVC VideoToolbox |
 | 想后期剪辑 | 用 ProRes VideoToolbox |
 
+在参数面板的“视频参数质量”页中，VideoToolbox 会直接按参数名显示控制目标：
+
+| 控制目标 | 作用 |
+| --- | --- |
+| `-b:v` | 按视频码率控制文件大小 |
+| `-q:v` | 按质量等级控制画质，文件大小由编码器决定 |
+| `-maxrate / -bufsize` | 限制峰值码率和码率波动，适合直播、网页或设备兼容 |
+
+VideoToolbox 模式下不会显示“质量参数名”输入框。H.264 / HEVC 的质量值会自动按 `-q:v` 生成命令；旧预设里残留的 `-crf`、`-cq`、`-qp`、`-global_quality` 会被跳过并在参数总览提示。ProRes VideoToolbox 不使用 `-q:v` 控制压缩质量，主要在“视频参数编码器”的 `profile` 中选择 `proxy`、`lt`、`standard`、`hq`、`4444` 或 `xq`。
+
 使用 `-b:v` 时，可以这样估算文件大小：
 
 ```text
