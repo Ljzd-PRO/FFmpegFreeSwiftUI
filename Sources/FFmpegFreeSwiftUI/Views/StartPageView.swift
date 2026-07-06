@@ -13,8 +13,18 @@ public struct StartPageView: View {
                         .font(.system(size: 48))
                         .foregroundStyle(.green)
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("FFmpegFreeSwiftUI")
-                            .font(.largeTitle.weight(.semibold))
+                        HStack(alignment: .firstTextBaseline, spacing: 10) {
+                            Text("FFmpegFreeSwiftUI")
+                                .font(.largeTitle.weight(.semibold))
+                            Text(AppVersion.shortDisplayString)
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(Color.accentColor)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(Color.accentColor.opacity(0.12))
+                                .clipShape(Capsule())
+                                .textSelection(.enabled)
+                        }
                         Text(t("将 ffmpeg、ffplay、ffprobe 加入环境变量、放在 App 同级目录，或在设置中指定路径即可调用。"))
                             .foregroundStyle(.secondary)
                     }

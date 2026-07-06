@@ -71,6 +71,8 @@ public struct SettingsView: View {
                 }
 
                 displaySection
+
+                aboutSection
             }
             .padding(24)
             .textFieldStyle(.roundedBorder)
@@ -252,6 +254,50 @@ public struct SettingsView: View {
             .padding(.vertical, 6)
             .background(Color(nsColor: .textBackgroundColor))
             .clipShape(RoundedRectangle(cornerRadius: 6))
+    }
+
+    private var aboutSection: some View {
+        settingsSection("关于本应用") {
+            HStack(spacing: 12) {
+                Image(systemName: "info.circle.fill")
+                    .font(.title2)
+                    .foregroundStyle(Color.accentColor)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("FFmpegFreeSwiftUI")
+                        .font(.headline)
+                    Text(t("本机显示的版本号来自 App bundle，可用于反馈问题或核对发布包。"))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            Grid(alignment: .leading, horizontalSpacing: 14, verticalSpacing: 8) {
+                GridRow {
+                    Text(t("版本"))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 130, alignment: .leading)
+                    Text(AppVersion.shortDisplayString)
+                        .font(.system(.body, design: .monospaced))
+                        .textSelection(.enabled)
+                }
+                GridRow {
+                    Text(t("构建"))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 130, alignment: .leading)
+                    Text(AppVersion.buildNumber)
+                        .font(.system(.body, design: .monospaced))
+                        .textSelection(.enabled)
+                }
+                GridRow {
+                    Text(t("应用标识"))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 130, alignment: .leading)
+                    Text(AppVersion.bundleIdentifier)
+                        .font(.system(.body, design: .monospaced))
+                        .textSelection(.enabled)
+                }
+            }
+        }
     }
 
     private func refreshDetectedLocations(message: String = "") {

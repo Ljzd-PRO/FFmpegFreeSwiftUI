@@ -1,6 +1,34 @@
 import AppKit
 import SwiftUI
 
+enum AppVersion {
+    static var marketingVersion: String {
+        bundleValue("CFBundleShortVersionString", fallback: "1.0.0")
+    }
+
+    static var buildNumber: String {
+        bundleValue("CFBundleVersion", fallback: "1")
+    }
+
+    static var bundleIdentifier: String {
+        Bundle.main.bundleIdentifier ?? "top.ffmpegfreeui.FFmpegFreeSwiftUI"
+    }
+
+    static var shortDisplayString: String {
+        "v\(marketingVersion)"
+    }
+
+    static var detailedDisplayString: String {
+        "\(shortDisplayString) (\(buildNumber))"
+    }
+
+    private static func bundleValue(_ key: String, fallback: String) -> String {
+        let value = Bundle.main.object(forInfoDictionaryKey: key) as? String
+        let trimmed = value?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return trimmed.isEmpty ? fallback : trimmed
+    }
+}
+
 enum ToolFilePanels {
     static func openFile(_ completion: @escaping (String) -> Void) {
         let panel = NSOpenPanel()

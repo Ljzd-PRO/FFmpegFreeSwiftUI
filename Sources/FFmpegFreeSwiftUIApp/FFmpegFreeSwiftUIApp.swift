@@ -49,6 +49,8 @@ struct FFmpegFreeSwiftUIExecutableApp: App {
                 .keyboardShortcut(",", modifiers: [.command])
             }
             CommandGroup(replacing: .help) {
+                Button(t("关于 FFmpegFreeSwiftUI")) { appState.navigate(to: .settings) }
+                Divider()
                 Button(t("插件扩展")) { appState.navigate(to: .plugins) }
                 Button(t("支持者")) { appState.navigate(to: .supporters) }
             }
