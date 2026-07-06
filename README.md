@@ -1,5 +1,9 @@
 # FFmpegFreeSwiftUI
 
+<p align="center">
+  <img src="docs/assets/app-icon.png" alt="FFmpegFreeSwiftUI logo" width="128">
+</p>
+
 `FFmpegFreeSwiftUI` 是 [FFmpegFreeUI](https://github.com/Lake1059/FFmpegFreeUI) 的 macOS 原生 SwiftUI 迁移版本。项目目标是尽量还原原版 v5 的页面顺序、参数面板和常用工作流，同时用 macOS 原生能力替代 Windows 专属实现。
 
 当前仓库仍保留原 Windows 项目作为迁移参考；macOS App 本体位于 `Sources/FFmpegFreeSwiftUI` 与 `Sources/FFmpegFreeSwiftUIApp`。
